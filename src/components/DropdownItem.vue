@@ -4,10 +4,10 @@
          class="dropdown-item-div">
         <template v-if="hasChildren">
             <div class="icon-div" @click="handleIconClick">
-                <vue-feather type="chevron-down"
+                <vue-feather type="chevron-right"
                             v-show="!open"
                             class="icon"/>
-                <vue-feather type="chevron-up"
+                <vue-feather type="chevron-down"
                             v-show="open"
                             class="icon"/>
             </div>

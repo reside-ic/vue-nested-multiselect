@@ -51,8 +51,7 @@
         default: "Select..."
       },
       modelValue: {
-        type: String,
-        required: true
+        type: String as PropType<string | undefined | null>
       }
     },
     setup(props, { emit }) {

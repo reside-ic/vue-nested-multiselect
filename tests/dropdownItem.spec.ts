@@ -33,11 +33,11 @@ describe("Dropdown item tests", () => {
         expect(iconDiv.classes()).toStrictEqual(["icon-div"]);
         expect(textDiv.classes()).toStrictEqual(["text-div"]);
 
-        const [chevronDown, chevronUp] = iconDiv.findAllComponents(VueFeather);
+        const [chevronRight, chevronDown] = iconDiv.findAllComponents(VueFeather);
+        expect(chevronRight.props("type")).toBe("chevron-right");
+        expect(chevronRight.classes()).toStrictEqual(["icon"]);
         expect(chevronDown.props("type")).toBe("chevron-down");
         expect(chevronDown.classes()).toStrictEqual(["icon"]);
-        expect(chevronUp.props("type")).toBe("chevron-up");
-        expect(chevronUp.classes()).toStrictEqual(["icon"]);
 
         expect(textDiv.classes()).toStrictEqual(["text-div"]);
         expect(textDiv.find("span").text()).toBe("testLabel");
