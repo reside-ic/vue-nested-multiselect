@@ -112,11 +112,12 @@ describe("Dropdown item tests", () => {
         vi.resetAllMocks();
     });
 
-    const getWrapper = (placeholder = undefined) => {
+    const getWrapper = (id = undefined, placeholder = undefined) => {
         return mount(SingleSelect, {
             props: {
                 options,
-                placeholder
+                placeholder,
+                modelValue: id
             }
         });
     };
@@ -147,6 +148,12 @@ describe("Dropdown item tests", () => {
         });
     });
 
+    it("sets label as expected", () => {
+        const wrapper = getWrapper("id1_1");
+        const cDropdownToggle = wrapper.findComponent(CDropdownToggle);
+        expect(cDropdownToggle.find("span").text()).toBe("child1");
+    });
+
     it("reset dropdown menu control sets show to undefined", () => {
         const wrapper = getWrapper();
         wrapper.vm.showDropdownMenu = true;
@@ -169,7 +176,7 @@ describe("Dropdown item tests", () => {
     it("handleSelectItem works as expected", () => {
         const wrapper = getWrapper();
         wrapper.vm.handleSelectItem("id1_1");
-        expect(wrapper.vm.label).toBe("child1");
+        expect(wrapper.emitted("update:modelValue")[0][0]).toBe("id1_1");
         expect(wrapper.vm.showDropdownMenu).toBe(false);
     });
 

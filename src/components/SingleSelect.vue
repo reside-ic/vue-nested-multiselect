@@ -26,13 +26,14 @@
 </template>
 
 <script lang="ts">
-  import { PropType, defineComponent, ref } from 'vue';
+  import { PropType, computed, defineComponent, ref } from 'vue';
   import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
   import { Option, FlatOption } from "./types";
   import DropdownItem from './DropdownItem.vue';
   import { flattenOptions, expandOptions, collapseOptions } from "./utils";
 
   export default defineComponent({
+    emits: ["update:modelValue"],
     components: {
       CDropdown,
       CDropdownToggle,
@@ -48,15 +49,22 @@
       placeholder: {
         type: String,
         default: "Select..."
+      },
+      modelValue: {
+        type: String,
+        required: true
       }
     },
-    setup(props) {
+    setup(props, { emit }) {
       const flatOps: FlatOption[] = [];
       flattenOptions(flatOps, props.options);
 
       const flatOptions = ref(flatOps);
-      const label = ref("");
       const showDropdownMenu = ref<boolean | undefined>(undefined);
+
+      const label = computed(() => {
+        return flatOptions.value.find(op => op.id === props.modelValue)?.label
+      });
 
       const resetDropdownMenuControl = () => {
         showDropdownMenu.value = undefined;
@@ -75,8 +83,7 @@
       };
 
       const handleSelectItem = (optionId: string) => {
-        const optionLabel = flatOptions.value.find(op => op.id === optionId)?.label;
-        label.value = optionLabel || "";
+        emit("update:modelValue", optionId);
         showDropdownMenu.value = false;
       }
 

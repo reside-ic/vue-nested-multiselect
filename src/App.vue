@@ -1,12 +1,12 @@
 <template>
   <div style="margin: 2rem; width: 15rem;">
     <h2>Single Select</h2>
-    <single-select :options="options"/>
+    <single-select :options="options" :modelValue="value" @update:modelValue="updateValue"/>
   </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import SingleSelect from './components/SingleSelect.vue';
   import { Option } from "./components/types";
 
@@ -15,6 +15,10 @@
       SingleSelect
     },
     setup() {
+      const value = ref<string | null>(null);
+      const updateValue = (optionId: string) => {
+        value.value = optionId
+      }
       const options: Option[] = [
         {
           id: "MWI_1",
@@ -53,7 +57,9 @@
       ]
 
       return {
-        options
+        options,
+        value,
+        updateValue
       }
     }
   })
