@@ -154,11 +154,11 @@ describe("Dropdown item tests", () => {
         expect(cDropdownToggle.find("span").text()).toBe("child1");
     });
 
-    it("reset dropdown menu control sets show to undefined", () => {
+    it("toggle dropdown menu toggles show", () => {
         const wrapper = getWrapper();
         wrapper.vm.showDropdownMenu = true;
-        wrapper.vm.resetDropdownMenuControl();
-        expect(wrapper.vm.showDropdownMenu).toBe(undefined);
+        wrapper.vm.toggleDropdownMenu();
+        expect(wrapper.vm.showDropdownMenu).toBe(false);
     });
 
     it("expand works as expected", () => {

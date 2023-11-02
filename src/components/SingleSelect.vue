@@ -1,9 +1,8 @@
 <template>
     <c-dropdown auto-close="outside"
                 class="dropdown"
-                :visible="showDropdownMenu"
-                @click="resetDropdownMenuControl">
-      <c-dropdown-toggle>
+                :visible="showDropdownMenu">
+      <c-dropdown-toggle @click="toggleDropdownMenu">
         <span>{{ label || placeholder }}</span>
       </c-dropdown-toggle>
       <c-dropdown-menu class="menu"
@@ -65,8 +64,8 @@
         return flatOptions.value.find(op => op.id === props.modelValue)?.label
       });
 
-      const resetDropdownMenuControl = () => {
-        showDropdownMenu.value = undefined;
+      const toggleDropdownMenu = () => {
+        showDropdownMenu.value = !showDropdownMenu.value;
       }
 
       const expand = (event: Event, optionPath: string) => {
@@ -98,7 +97,7 @@
         collapse,
         handleSelectItem,
         preventDefault,
-        resetDropdownMenuControl
+        toggleDropdownMenu
       }
     },
   })
