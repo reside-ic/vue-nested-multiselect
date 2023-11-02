@@ -35,7 +35,7 @@ export const expandOptions = (array: FlatOption[], optionPath: string): FlatOpti
         const show = openOptions.some(openOp => {
           const openPath = openOp.split("/");
           return openPath.length === opPath.length - 1 &&
-                 JSON.stringify(openPath) === JSON.stringify(opPath.slice(0, -1))
+                 openPath.join("") === opPath.slice(0, -1).join("")
         })
 
         if (op.hasChildren && op.open) {
@@ -58,7 +58,7 @@ export const collapseOptions = (array: FlatOption[], optionPath: string) => {
 
         // if you are any number of layer under the option you should not show
         const opPath = op.path.split("/");
-        if (JSON.stringify(path) === JSON.stringify(opPath.slice(0, path.length))) {
+        if (path.join("") === opPath.slice(0, path.length).join("")) {
           return { ...op, show: false }
         }
         return op
