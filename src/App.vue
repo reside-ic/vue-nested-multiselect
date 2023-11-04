@@ -2,22 +2,31 @@
   <div style="margin: 2rem; width: 15rem;">
     <h2>Single Select</h2>
     <single-select :options="options" :modelValue="value" @update:modelValue="updateValue"/>
+    <h2 style="margin-top: 3rem;">Multi Select</h2>
+    <multi-select :options="options" :modelValue="multiValue" @update:modelValue="updateMultiValue"/>
   </div>
 </template>
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
   import SingleSelect from './components/SingleSelect.vue';
+  import MultiSelect from './components/MultiSelect.vue';
   import { Option } from "./components/types";
 
   export default defineComponent({
     components: {
-      SingleSelect
+      SingleSelect,
+      MultiSelect
     },
     setup() {
       const value = ref<string | null>(null);
       const updateValue = (optionId: string) => {
         value.value = optionId
+      };
+
+      const multiValue = ref<string[] | null>(null);
+      const updateMultiValue = (optionId: string[]) => {
+        multiValue.value = optionId
       }
       const options: Option[] = [
         {
@@ -38,7 +47,17 @@
               children: [
                 {
                   id: "MWI_1_3_1",
-                  label: "UltimateChild"
+                  label: "UltimateChild",
+                  children: [
+                    {
+                      id:"MWI_1_3_1_4",
+                      label: "SurpriseChildWoohoo"
+                    }
+                  ]
+                },
+                {
+                  id: "MWI_1_3_2",
+                  label: "UltimateChild2"
                 }
               ]
             },
@@ -59,7 +78,9 @@
       return {
         options,
         value,
-        updateValue
+        updateValue,
+        multiValue,
+        updateMultiValue
       }
     }
   })
