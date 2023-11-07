@@ -17,7 +17,7 @@ export const flattenOptions = (array: FlatOption[], options: Option[], path: str
             array.push({...baseOption, hasChildren, open: false});
             flattenOptions(array, op.children!, newPath);
         } else {
-            array.push({...baseOption, hasChildren})
+            array.push({...baseOption, hasChildren});
         }
     });
 };
@@ -26,7 +26,7 @@ export const expandOptions = (array: FlatOption[], optionPath: string): FlatOpti
     const openOptions: string[] = [optionPath];
     return array.map(op => {
         if (op.path === optionPath) {
-          return { ...op, open: true }
+          return { ...op, open: true };
         }
 
         const opPath = op.path.split("/");
@@ -35,17 +35,17 @@ export const expandOptions = (array: FlatOption[], optionPath: string): FlatOpti
         const show = openOptions.some(openOp => {
           const openPath = openOp.split("/");
           return openPath.length === opPath.length - 1 &&
-                 openPath.join("/") === opPath.slice(0, -1).join("/")
-        })
+                 openPath.join("") === opPath.slice(0, -1).join("");
+        });
 
         if (op.hasChildren && op.open) {
-          openOptions.push(op.path)
+          openOptions.push(op.path);
         }
 
         if (show) {
-          return { ...op, show }
+          return { ...op, show };
         }
-        return op
+        return op;
     });
 };
 
@@ -53,14 +53,14 @@ export const collapseOptions = (array: FlatOption[], optionPath: string) => {
     const path = optionPath.split("/");
     return array.map(op => {
         if (op.path === optionPath) {
-          return { ...op, open: false }
+            return { ...op, open: false };
         }
 
         // if you are any number of layer under the option you should not show
         const opPath = op.path.split("/");
-        if (path.join("/") === opPath.slice(0, path.length).join("/")) {
-          return { ...op, show: false }
+        if (path.join("") === opPath.slice(0, path.length).join("")) {
+            return { ...op, show: false };
         }
-        return op
+        return op;
     });
 };
