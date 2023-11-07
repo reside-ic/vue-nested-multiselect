@@ -10,13 +10,9 @@
                        @mousedown="preventDefault">
         <template v-for="option in flatOptions">
           <c-dropdown-item v-show="option.show" class="item">
-            <dropdown-item :has-children="option.hasChildren"
-                           :label="option.label"
-                           :id="option.id"
-                           :expand="(event) => expand(event, option.path)"
-                           :collapse="(event) => collapse(event, option.path)"
-                           :indentation="option.path.split('/').length - 2"
-                           :open="option.hasChildren && option.open"
+            <dropdown-item :option="option"
+                           @expand="expand"
+                           @collapse="collapse"
                            @select-item="handleSelectItem"></dropdown-item>
           </c-dropdown-item>
         </template>
@@ -56,8 +52,8 @@
     setup(props, { emit }) {
       const flatOps: FlatOption[] = [];
       flattenOptions(flatOps, props.options);
-
       const flatOptions = ref(flatOps);
+
       const showDropdownMenu = ref<boolean | undefined>(undefined);
 
       const label = computed(() => {
@@ -68,14 +64,12 @@
         showDropdownMenu.value = !showDropdownMenu.value;
       }
 
-      const expand = (event: Event, optionPath: string) => {
-        event.preventDefault();
+      const expand = (optionPath: string) => {
         const newFlatOptions = expandOptions(flatOptions.value, optionPath);
         flatOptions.value = newFlatOptions;
       };
 
-      const collapse = (event: Event, optionPath: string) => {
-        event.preventDefault();
+      const collapse = (optionPath: string) => {
         const newFlatOptions = collapseOptions(flatOptions.value, optionPath);
         flatOptions.value = newFlatOptions;
       };
