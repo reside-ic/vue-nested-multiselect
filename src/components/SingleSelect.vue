@@ -1,9 +1,10 @@
 <template>
     <c-dropdown auto-close="outside"
                 class="dropdown"
+                :popper="false"
                 :visible="showDropdownMenu">
       <c-dropdown-toggle @click="toggleDropdownMenu">
-        <span>{{ label || placeholder }}</span>
+        <span class="label">{{ label || placeholder }}</span>
       </c-dropdown-toggle>
       <c-dropdown-menu class="menu"
                        @click="preventDefault"
@@ -108,10 +109,28 @@
 
 .item {
   padding: 0;
-  display: flex; 
+  display: flex;
 }
 
 .item:hover {
   cursor: pointer;
+}
+
+.dropdown-toggle {
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-toggle::after {
+  margin-left: auto;
+}
+
+.label {
+  margin-right: 10px;
+  white-space: normal;
+  overflow: auto;
+  overflow-wrap: break-word;
+  text-align: left;
 }
 </style>

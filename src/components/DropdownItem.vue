@@ -2,34 +2,30 @@
     <div :style="{ paddingLeft: `${indentation * 1.6 + 0.5}rem` }"
          @click="handleClick"
          class="dropdown-item-div">
-        <template v-if="hasChildren">
+        <template v-if="option.hasChildren">
             <div class="icon-div" @click="handleIconClick">
                 <vue-feather type="chevron-right"
-                            v-show="!open"
+                            v-show="!option.open"
                             class="icon"/>
                 <vue-feather type="chevron-down"
-                            v-show="open"
+                            v-show="option.open"
                             class="icon"/>
             </div>
         </template>
         <div class="text-div">
-            <span>{{ label }}</span>
+            <span>{{ option.label }}</span>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-    import { PropType, defineComponent } from 'vue';
+    import { PropType, defineComponent, computed } from 'vue';
     import VueFeather from "vue-feather";
+    import { FlatOption } from './types';
 
     export default defineComponent({
-        emits: ["select-item"],
+        emits: ["select-item", "expand", "collapse"],
         props: {
-            hasChildren: {
-                type: Boolean,
-                required: true
-            },
-            open: Boolean,
             expand: {
                 type: Function as PropType<(payload: MouseEvent) => void>,
                 default: () => null
@@ -38,16 +34,8 @@
                 type: Function as PropType<(payload: MouseEvent) => void>,
                 default: () => null
             },
-            label: {
-                type: String,
-                required: true
-            },
-            id: {
-                type: String,
-                required: true
-            },
-            indentation: {
-                type: Number,
+            option: {
+                type: Object as PropType<FlatOption>,
                 required: true
             }
         },
@@ -56,7 +44,7 @@
         },
         setup(props, { emit }) {
             const handleClick = () => {
-                emit("select-item", props.id);
+                emit("select-item", props.option.id);
             };
 
             const handleIconClick = (event: MouseEvent) => {
@@ -66,16 +54,19 @@
                 // click the expand icon
                 event.stopPropagation();
 
-                if (props.open) {
-                    props.collapse(event);
+                if (props.option.hasChildren && props.option.open) {
+                    emit("collapse", props.option.path);
                 } else {
-                    props.expand(event);
+                    emit("expand", props.option.path);
                 }
             };
 
+            const indentation = computed(() => props.option.path.split('/').length - 2);
+
             return {
                 handleClick,
-                handleIconClick
+                handleIconClick,
+                indentation
             }
         },
     });
@@ -100,9 +91,11 @@
 }
 
 .text-div {
-    flex-grow: 1;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    white-space: normal;
+    overflow: auto;
+    overflow-wrap: break-word;
 }
 
 .dropdown-item-div {

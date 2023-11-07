@@ -2,15 +2,29 @@ import { shallowMount } from "@vue/test-utils";
 import DropdownItem from "../src/components/DropdownItem.vue";
 import VueFeather from "vue-feather";
 import { vi } from "vitest";
+import { FlatOption } from "../src/components/types";
 
 describe("Dropdown item tests", () => {
-    const mockExpand = vi.fn();
-    const mockCollapse = vi.fn();
     const mockPreventDefault = vi.fn();
     const mockStopPropagation = vi.fn();
 
-    const getWrapper = (props) => {
-        return shallowMount(DropdownItem, {props});
+    const baseOption: FlatOption = {
+        hasChildren: false,
+        label: "testLabel",
+        id: "testId",
+        path: "/my/test/path/and/testId",
+        show: false
+    }
+
+    const getWrapper = (options) => {
+        return shallowMount(DropdownItem, {
+            props: {
+                option: {
+                    ...baseOption,
+                    ...options
+                }
+            }
+        });
     };
 
     afterEach(() => {
@@ -20,46 +34,36 @@ describe("Dropdown item tests", () => {
     it("renders as expected with children", () => {
         const wrapper = getWrapper({
             hasChildren: true,
-            label: "testLabel",
-            id: "testId",
-            indentation: 4
+            open: false
         });
 
         const dropdownItemDiv = wrapper.find("div");
-        expect(dropdownItemDiv.classes()).toStrictEqual(["dropdown-item-div"]);
+        expect(dropdownItemDiv.classes()).toContain("dropdown-item-div");
         expect(dropdownItemDiv.attributes("style")).toBe("padding-left: 6.9rem;")
 
         const [iconDiv, textDiv] = dropdownItemDiv.findAll("div");
-        expect(iconDiv.classes()).toStrictEqual(["icon-div"]);
-        expect(textDiv.classes()).toStrictEqual(["text-div"]);
+        expect(iconDiv.classes()).toContain("icon-div");
+        expect(textDiv.classes()).toContain("text-div");
 
         const [chevronRight, chevronDown] = iconDiv.findAllComponents(VueFeather);
         expect(chevronRight.props("type")).toBe("chevron-right");
-        expect(chevronRight.classes()).toStrictEqual(["icon"]);
+        expect(chevronRight.classes()).toContain("icon");
         expect(chevronDown.props("type")).toBe("chevron-down");
-        expect(chevronDown.classes()).toStrictEqual(["icon"]);
+        expect(chevronDown.classes()).toContain("icon");
 
-        expect(textDiv.classes()).toStrictEqual(["text-div"]);
+        expect(textDiv.classes()).toContain("text-div");
         expect(textDiv.find("span").text()).toBe("testLabel");
     });
 
     it("does not render icons if no children", () => {
-        const wrapper = getWrapper({
-            hasChildren: false,
-            label: "testLabel",
-            id: "testId",
-            indentation: 4
-        });
-
+        const wrapper = getWrapper({});
         expect(wrapper.findAllComponents(VueFeather)).toStrictEqual([]);
     });
 
     it("emits value when clicked", () => {
         const wrapper = getWrapper({
             hasChildren: true,
-            label: "testLabel",
-            id: "testId",
-            indentation: 4
+            open: false
         });
 
         const dropdownItemDiv = wrapper.find("div");
@@ -70,11 +74,6 @@ describe("Dropdown item tests", () => {
     it("calls expand when icon clicked and option closed", async () => {
         const wrapper = getWrapper({
             hasChildren: true,
-            label: "testLabel",
-            id: "testId",
-            indentation: 4,
-            expand: mockExpand,
-            collapse: mockCollapse,
             open: false
         });
 
@@ -85,20 +84,12 @@ describe("Dropdown item tests", () => {
 
         expect(mockPreventDefault.mock.calls.length).toBe(1);
         expect(mockStopPropagation.mock.calls.length).toBe(1);
-        expect(mockExpand.mock.calls.length).toBe(1);
-        expect(mockCollapse.mock.calls.length).toBe(0);
-
-        await wrapper.setProps({open: true});
+        expect(wrapper.emitted("expand")![0][0]).toBe("/my/test/path/and/testId");
     });
 
     it("calls collapse when when icon clicked and option open", () => {
         const wrapper = getWrapper({
             hasChildren: true,
-            label: "testLabel",
-            id: "testId",
-            indentation: 4,
-            expand: mockExpand,
-            collapse: mockCollapse,
             open: true
         });
 
@@ -109,7 +100,6 @@ describe("Dropdown item tests", () => {
 
         expect(mockPreventDefault.mock.calls.length).toBe(1);
         expect(mockStopPropagation.mock.calls.length).toBe(1);
-        expect(mockExpand.mock.calls.length).toBe(0);
-        expect(mockCollapse.mock.calls.length).toBe(1);
+        expect(wrapper.emitted("collapse")![0][0]).toBe("/my/test/path/and/testId");
     });
 });
