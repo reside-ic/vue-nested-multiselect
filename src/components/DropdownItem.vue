@@ -26,9 +26,7 @@
 <script lang="ts">
     import { PropType, defineComponent, computed } from 'vue';
     import VueFeather from "vue-feather";
-    import { CButton } from "@coreui/vue";
-    import { CheckStatus, FlatOption } from './types';
-    import CheckBox from './CheckBox.vue';
+    import { FlatOption } from './types';
 
     export default defineComponent({
         emits: ["select-item", "expand", "collapse"],
@@ -40,14 +38,6 @@
             collapse: {
                 type: Function as PropType<(payload: MouseEvent) => void>,
                 default: () => null
-            },
-            multiple: {
-                type: Boolean,
-                default: false
-            },
-            checked: {
-                type: Number as PropType<CheckStatus>,
-                default: CheckStatus.UNCHECKED
             },
             option: {
                 type: Object as PropType<FlatOption>,
@@ -78,12 +68,11 @@
                 }
             };
 
-            const indentation = computed(() => props.option.path.split('/').length - 2);
+            const indentation = computed(() => props.option.path.length - 1);
 
             return {
                 handleClick,
                 handleIconClick,
-                CheckStatus,
                 indentation
             }
         },
@@ -111,8 +100,9 @@
 .text-div {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    word-break: break-all;
     white-space: normal;
+    overflow: auto;
+    overflow-wrap: break-word;
 }
 
 .dropdown-item-div {

@@ -31,33 +31,23 @@
       const options: Option[] = [
         {
           id: "MWI_1",
-          label: "Northern",
+          label: "Parent",
           children: [
             {
               id: "MWI_1_1",
-              label: "NothernChild1"
+              label: "ChildWithLongNameAndNoSpaces"
             },
             {
               id: "MWI_1_2",
-              label: "NothernChild2"
+              label: "Another child"
             },
             {
               id: "MWI_1_3",
-              label: "NothernChild3",
+              label: "ThirdChild",
               children: [
                 {
                   id: "MWI_1_3_1",
-                  label: "UltimateChild",
-                  children: [
-                    {
-                      id:"MWI_1_3_1_4",
-                      label: "SurpriseChildWoohoo"
-                    }
-                  ]
-                },
-                {
-                  id: "MWI_1_3_2",
-                  label: "UltimateChild2"
+                  label: "Nested child with long name"
                 }
               ]
             },
@@ -65,11 +55,11 @@
         },
         {
           id: "MWI_2",
-          label: "Central",
+          label: "Parent with a long name and spaces",
           children: [
             {
               id: "MWI_2_1",
-              label: "CentralChild"
+              label: "Different child"
             }
           ]
         }

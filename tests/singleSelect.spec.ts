@@ -9,7 +9,7 @@ vi.mock("../src/components/utils", async () => {
         {
             id: 'id1',
             label: 'parent1',
-            path: '/id1',
+            path: ['id1'],
             show: true,
             hasChildren: true,
             open: true
@@ -17,14 +17,14 @@ vi.mock("../src/components/utils", async () => {
         {
             id: 'id1_1',
             label: 'child1',
-            path: '/id1/id1_1',
+            path: ['id1', 'id1_1'],
             show: true,
             hasChildren: false
         },
         {
             id: 'id2',
             label: 'parent2',
-            path: '/id2',
+            path: ['id2'],
             show: true,
             hasChildren: false
         },
@@ -34,7 +34,7 @@ vi.mock("../src/components/utils", async () => {
         {
             id: 'id1',
             label: 'parent1',
-            path: '/id1',
+            path: ['id1'],
             show: true,
             hasChildren: true,
             open: false
@@ -42,14 +42,14 @@ vi.mock("../src/components/utils", async () => {
         {
             id: 'id1_1',
             label: 'child1',
-            path: '/id1/id1_1',
+            path: ['id1', 'id1_1'],
             show: false,
             hasChildren: false
         },
         {
             id: 'id2',
             label: 'parent2',
-            path: '/id2',
+            path: ['id2'],
             show: true,
             hasChildren: false
         },
@@ -87,7 +87,7 @@ describe("Dropdown item tests", () => {
         {
             id: 'id1',
             label: 'parent1',
-            path: '/id1',
+            path: ['id1'],
             show: true,
             hasChildren: true,
             open: false
@@ -95,14 +95,14 @@ describe("Dropdown item tests", () => {
         {
             id: 'id1_1',
             label: 'child1',
-            path: '/id1/id1_1',
+            path: ['id1', 'id1_1'],
             show: false,
             hasChildren: false
         },
         {
             id: 'id2',
             label: 'parent2',
-            path: '/id2',
+            path: ['id2'],
             show: true,
             hasChildren: false
         },
@@ -112,7 +112,7 @@ describe("Dropdown item tests", () => {
         vi.resetAllMocks();
     });
 
-    const getWrapper = (id = undefined, placeholder = undefined) => {
+    const getWrapper = (id: string | undefined = undefined, placeholder = undefined) => {
         return mount(SingleSelect, {
             props: {
                 options,
@@ -127,24 +127,24 @@ describe("Dropdown item tests", () => {
 
         const cDropdown = wrapper.findComponent(CDropdown);
         expect(cDropdown.props("autoClose")).toBe("outside");
+        expect(cDropdown.props("popper")).toBe(false);
+        expect(cDropdown.classes()).toContain("dropdown");
 
         const cDropdownToggle = wrapper.findComponent(CDropdownToggle);
         expect(cDropdownToggle.find("span").text()).toBe("Select...");
+        expect(cDropdownToggle.find("span").classes()).toContain("label");
 
         const cDropdownMenu = wrapper.findComponent(CDropdownMenu);
         expect(cDropdownMenu.exists()).toBe(true);
+        expect(cDropdownMenu.classes()).toContain("menu");
 
         const cDropdownItems = wrapper.findAllComponents(CDropdownItem);
         expect(cDropdownItems.every(item => item.isVisible())).toBe(true);
+        expect(cDropdownItems.every(item => expect(item.classes()).toContain("item"))).toBe(true);
 
         const dropdownItem = wrapper.findAllComponents(DropdownItem);
         dropdownItem.forEach((item, index) => {
-            expect(item.props("hasChildren")).toBe(flatOptions[index].hasChildren);
-            expect(item.props("label")).toBe(flatOptions[index].label);
-            expect(item.props("id")).toBe(flatOptions[index].id);
-            expect(item.props("open")).toBe(flatOptions[index].hasChildren && flatOptions[index].open);
-            // second in array is child of first
-            expect(item.props("indentation")).toBe(index === 1 ? 1 : 0);
+            expect(item.props("option")).toStrictEqual(flatOptions[index]);
         });
     });
 
@@ -161,22 +161,29 @@ describe("Dropdown item tests", () => {
         expect(wrapper.vm.showDropdownMenu).toBe(false);
     });
 
-    it("expand works as expected", () => {
+    it("expand works as expected with dropdown item emits expand", () => {
         const wrapper = getWrapper();
-        wrapper.vm.expand({ preventDefault: mockPreventDefault } as any, "id");
-        expect(mockPreventDefault.mock.calls.length).toBe(1);
+        const dropdownItems = wrapper.findAllComponents(DropdownItem);
+        dropdownItems[0].vm.$emit("expand", "/id1");
+        // child should be expanded
+        expect(wrapper.vm.flatOptions[1].show).toBe(true);
     });
 
     it("collapse works as expected", () => {
         const wrapper = getWrapper();
-        wrapper.vm.collapse({ preventDefault: mockPreventDefault } as any, "id");
-        expect(mockPreventDefault.mock.calls.length).toBe(1);
+        const dropdownItems = wrapper.findAllComponents(DropdownItem);
+        dropdownItems[0].vm.$emit("expand", "/id1");
+        expect(wrapper.vm.flatOptions[1].show).toBe(true);
+
+        dropdownItems[0].vm.$emit("collapse", "/id1");
+        expect(wrapper.vm.flatOptions[1].show).toBe(false);
     });
 
     it("handleSelectItem works as expected", () => {
         const wrapper = getWrapper();
-        wrapper.vm.handleSelectItem("id1_1");
-        expect(wrapper.emitted("update:modelValue")[0][0]).toBe("id1_1");
+        const dropdownItems = wrapper.findAllComponents(DropdownItem);
+        dropdownItems[0].vm.$emit("select-item", "id1_1");
+        expect(wrapper.emitted("update:modelValue")![0][0]).toBe("id1_1");
         expect(wrapper.vm.showDropdownMenu).toBe(false);
     });
 

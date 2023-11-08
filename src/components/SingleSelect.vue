@@ -1,9 +1,10 @@
 <template>
     <c-dropdown auto-close="outside"
                 class="dropdown"
+                :popper="false"
                 :visible="showDropdownMenu">
       <c-dropdown-toggle @click="toggleDropdownMenu">
-        <span>{{ label || placeholder }}</span>
+        <span class="label">{{ label || placeholder }}</span>
       </c-dropdown-toggle>
       <c-dropdown-menu class="menu"
                        @click="preventDefault"
@@ -52,8 +53,8 @@
     setup(props, { emit }) {
       const flatOps: FlatOption[] = [];
       flattenOptions(flatOps, props.options);
-
       const flatOptions = ref(flatOps);
+
       const showDropdownMenu = ref<boolean | undefined>(undefined);
 
       const label = computed(() => {
@@ -64,12 +65,12 @@
         showDropdownMenu.value = !showDropdownMenu.value;
       }
 
-      const expand = (optionPath: string) => {
+      const expand = (optionPath: string[]) => {
         const newFlatOptions = expandOptions(flatOptions.value, optionPath);
         flatOptions.value = newFlatOptions;
       };
 
-      const collapse = (optionPath: string) => {
+      const collapse = (optionPath: string[]) => {
         const newFlatOptions = collapseOptions(flatOptions.value, optionPath);
         flatOptions.value = newFlatOptions;
       };
@@ -108,10 +109,28 @@
 
 .item {
   padding: 0;
-  display: flex; 
+  display: flex;
 }
 
 .item:hover {
   cursor: pointer;
+}
+
+.dropdown-toggle {
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-toggle::after {
+  margin-left: auto;
+}
+
+.label {
+  margin-right: 10px;
+  white-space: normal;
+  overflow: auto;
+  overflow-wrap: break-word;
+  text-align: left;
 }
 </style>
