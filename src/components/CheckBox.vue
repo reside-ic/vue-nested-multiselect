@@ -40,8 +40,6 @@
 
 <style scoped>
 .checked-div, .unchecked-div {
-    display: flex;
-    align-items: center;
     margin-right: 0.6rem
 }
 
@@ -54,7 +52,7 @@
 .checked-icon {
     height: 0.75rem;
     width: 0.75rem;
-    margin-top: 0.1rem;
+    margin-top: 0.05rem;
     vertical-align: super;
     color: aliceblue;
 }

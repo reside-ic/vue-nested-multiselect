@@ -35,7 +35,7 @@
           children: [
             {
               id: "MWI_1_1",
-              label: "ChildWithLongNameAndNoSpaces"
+              label: "ChildWithLongNameAndNoSpacesAtAll"
             },
             {
               id: "MWI_1_2",

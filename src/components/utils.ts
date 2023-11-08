@@ -79,9 +79,7 @@ export const getAllNestedChildrenIds = (flatOptions: FlatOption[], ids: string[]
         // an option is a nested child if a parent option's path
         // is a prefix of its path
         const isNestedChild = parentOptions.some(parentOp => {
-            const parentPath = parentOp.path.split("/");
-            const optionPath = op.path.split("/");
-            return parentPath.join("/") === optionPath.slice(0, parentPath.length).join("/");
+            return arraysAreEqual(parentOp.path, op.path.slice(0, parentOp.path.length));
         });
 
         if (isNestedChild) {
@@ -115,22 +113,20 @@ const recordChildStatus = (parentId: string | undefined, record: ChildCheckedRec
 export const createCheckedObject = (flatOptions: FlatOption[], checkedValues: string[]): CheckObject => {
     const checkedObject: CheckObject = {};
     flatOptions.forEach(op => {
-        checkedObject[op.path] = CheckStatus.UNCHECKED;
+        checkedObject[op.path.join("/")] = CheckStatus.UNCHECKED;
     });
 
     // create array of deepest to root node
-    const options = flatOptions.slice();
-    options.sort((op1, op2) => {
-        const op1PathLength = op1.path.split("/").length;
-        const op2PathLength = op2.path.split("/").length;
-        return op1PathLength > op2PathLength ? -1 : 1
+    const revOptions = flatOptions.slice();
+    revOptions.sort((op1, op2) => {
+        return op1.path.length > op2.path.length ? -1 : 1
     });
 
     // We will record how many immediate children as checked, unchecked or partial
     // for each parent that has children. We are guaranteed to check all children
     // since we are going from deepest to root node
     const childCheckedRecord: ChildCheckedRecord = {};
-    options.forEach(op => {
+    revOptions.forEach(op => {
         if (op.hasChildren) {
             childCheckedRecord[op.id] = {
                 checked: 0,
@@ -142,9 +138,9 @@ export const createCheckedObject = (flatOptions: FlatOption[], checkedValues: st
 
     // we traverse the tree while both setting check status for children
     // and recording their status for their immediate parent
-    options.forEach(op => {
+    revOptions.forEach(op => {
         let status;
-        const parentId = op.path.split("/").at(-2)
+        const parentId = op.path.at(-2)
         if (!op.hasChildren) {
             if (checkedValues.includes(op.id)) {
                 status = CheckStatus.CHECKED;
@@ -162,7 +158,7 @@ export const createCheckedObject = (flatOptions: FlatOption[], checkedValues: st
             }
         }
         recordChildStatus(parentId, childCheckedRecord, status);
-        checkedObject[op.path] = status;
+        checkedObject[op.path.join("/")] = status;
     });
     return checkedObject;
 };
@@ -178,8 +174,7 @@ export const getTopLevelOptionTags = (
         if (lowLevelOptionIds.includes(op.id)) {
             return;
         }
-        const parentIds = op.path.split("/");
-        parentIds.shift();
+        const parentIds = op.path;
 
         // we loop from the highest parent's id in this option's path
         // to the lowest which is itself's id in its path and break
@@ -190,7 +185,7 @@ export const getTopLevelOptionTags = (
         // so we do not care about any of its nested children
         for (let i = 0; i < parentIds.length; i++) {
             const parentOp = flatOptions.find(op => op.id === parentIds[i])!;
-            if (checkedObject[parentOp.path] === CheckStatus.CHECKED) {
+            if (checkedObject[parentOp.path.join("/")] === CheckStatus.CHECKED) {
                 if (!topLevelOptionTags.map(tag => tag.id).includes(parentOp.id)) {
                     topLevelOptionTags.push({
                         id: parentOp.id,

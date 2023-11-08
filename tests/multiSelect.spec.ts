@@ -1,8 +1,9 @@
 import { mount } from "@vue/test-utils";
-import SingleSelect from "../src/components/SingleSelect.vue";
+import MultiSelect from "../src/components/MultiSelect.vue";
 import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
 import DropdownItem from "../src/components/DropdownItem.vue";
 import { vi } from "vitest";
+import Tags from "../src/components/Tags.vue";
 
 vi.mock("../src/components/utils", async () => {
     const flatOptionsExpanded = [
@@ -22,13 +23,20 @@ vi.mock("../src/components/utils", async () => {
             hasChildren: false
         },
         {
+            id: 'id1_2',
+            label: 'child2',
+            path: ['id1', 'id1_2'],
+            show: true,
+            hasChildren: false
+        },
+        {
             id: 'id2',
             label: 'parent2',
             path: ['id2'],
             show: true,
             hasChildren: false
         },
-    ]
+    ];
 
     const flatOptionsCollapsed = [
         {
@@ -47,13 +55,20 @@ vi.mock("../src/components/utils", async () => {
             hasChildren: false
         },
         {
+            id: 'id1_2',
+            label: 'child2',
+            path: ['id1', 'id1_2'],
+            show: false,
+            hasChildren: false
+        },
+        {
             id: 'id2',
             label: 'parent2',
             path: ['id2'],
             show: true,
             hasChildren: false
         },
-    ]
+    ];
 
     const actual = await vi.importActual("../src/components/utils") as any;
     return {
@@ -74,6 +89,10 @@ describe("Dropdown item tests", () => {
                 {
                     id: "id1_1",
                     label: "child1"
+                },
+                {
+                    id: "id1_2",
+                    label: "child2"
                 }
             ]
         },
@@ -100,6 +119,13 @@ describe("Dropdown item tests", () => {
             hasChildren: false
         },
         {
+            id: 'id1_2',
+            label: 'child2',
+            path: ['id1', 'id1_2'],
+            show: false,
+            hasChildren: false
+        },
+        {
             id: 'id2',
             label: 'parent2',
             path: ['id2'],
@@ -112,8 +138,8 @@ describe("Dropdown item tests", () => {
         vi.resetAllMocks();
     });
 
-    const getWrapper = (id: string | undefined = undefined, placeholder = undefined) => {
-        return mount(SingleSelect, {
+    const getWrapper = (id: string[] | undefined = undefined, placeholder = undefined) => {
+        return mount(MultiSelect, {
             props: {
                 options,
                 placeholder,
@@ -132,17 +158,19 @@ describe("Dropdown item tests", () => {
 
         const cDropdownToggle = wrapper.findComponent(CDropdownToggle);
         expect(cDropdownToggle.find("span").text()).toBe("Select...");
-        expect(cDropdownToggle.find("span").classes()).toContain("label");
+        expect(cDropdownToggle.find("span").classes()).toContain("placeholder-span");
+
+        expect(cDropdownToggle.findComponent(Tags).exists()).toBe(false);
 
         const cDropdownMenu = wrapper.findComponent(CDropdownMenu);
-        expect(cDropdownMenu.exists()).toBe(true);
+        expect(cDropdownMenu.exists());
         expect(cDropdownMenu.classes()).toContain("menu");
 
         const cDropdownItems = wrapper.findAllComponents(CDropdownItem);
-        // middle item is a child so not visible right now
-        expect(cDropdownItems.every((item, index) => index === 1 ? !item.isVisible() : item.isVisible()))
-            .toBe(true);
-        expect(cDropdownItems.every(item => expect(item.classes()).toContain("item"))).toBe(true);
+        expect(cDropdownItems.every((item, index) => index === 1 || index === 2 ?
+                                                     !item.isVisible() :
+                                                     item.isVisible()));
+        expect(cDropdownItems.every(item => expect(item.classes()).toContain("item")));
 
         const dropdownItem = wrapper.findAllComponents(DropdownItem);
         dropdownItem.forEach((item, index) => {
@@ -150,25 +178,23 @@ describe("Dropdown item tests", () => {
         });
     });
 
-    it("sets label as expected", () => {
-        const wrapper = getWrapper("id1_1");
-        const cDropdownToggle = wrapper.findComponent(CDropdownToggle);
-        expect(cDropdownToggle.find("span").text()).toBe("child1");
-    });
-
-    it("toggle dropdown menu toggles show", () => {
-        const wrapper = getWrapper();
-        wrapper.vm.showDropdownMenu = true;
-        wrapper.vm.toggleDropdownMenu();
-        expect(wrapper.vm.showDropdownMenu).toBe(false);
+    it("sets tags as expected", () => {
+        const wrapper = getWrapper(["id1"]);
+        const tag = wrapper.findComponent(Tags);
+        expect(tag.props("tags")).toStrictEqual([
+            {
+                id: "id1",
+                label: "parent1"
+            }
+        ])
     });
 
     it("expand works as expected with dropdown item emits expand", () => {
         const wrapper = getWrapper();
         const dropdownItems = wrapper.findAllComponents(DropdownItem);
         dropdownItems[0].vm.$emit("expand", "/id1");
-        // child should be expanded
         expect(wrapper.vm.flatOptions[1].show).toBe(true);
+        expect(wrapper.vm.flatOptions[2].show).toBe(true);
     });
 
     it("collapse works as expected", () => {
@@ -176,17 +202,18 @@ describe("Dropdown item tests", () => {
         const dropdownItems = wrapper.findAllComponents(DropdownItem);
         dropdownItems[0].vm.$emit("expand", "/id1");
         expect(wrapper.vm.flatOptions[1].show).toBe(true);
+        expect(wrapper.vm.flatOptions[2].show).toBe(true);
 
         dropdownItems[0].vm.$emit("collapse", "/id1");
         expect(wrapper.vm.flatOptions[1].show).toBe(false);
+        expect(wrapper.vm.flatOptions[2].show).toBe(false);
     });
 
     it("handleSelectItem works as expected", () => {
         const wrapper = getWrapper();
         const dropdownItems = wrapper.findAllComponents(DropdownItem);
         dropdownItems[0].vm.$emit("select-item", "id1_1");
-        expect(wrapper.emitted("update:modelValue")![0][0]).toBe("id1_1");
-        expect(wrapper.vm.showDropdownMenu).toBe(false);
+        expect(wrapper.emitted("update:modelValue")![0][0]).toStrictEqual(["id1_1"]);
     });
 
     it("preventDefault prevents default", () => {
