@@ -12,7 +12,7 @@ describe("Dropdown item tests", () => {
         hasChildren: false,
         label: "testLabel",
         id: "testId",
-        path: "/my/test/path/and/testId",
+        path: ["my", "test", "path", "and", "testId"],
         show: false
     }
 
@@ -84,7 +84,7 @@ describe("Dropdown item tests", () => {
 
         expect(mockPreventDefault.mock.calls.length).toBe(1);
         expect(mockStopPropagation.mock.calls.length).toBe(1);
-        expect(wrapper.emitted("expand")![0][0]).toBe("/my/test/path/and/testId");
+        expect(wrapper.emitted("expand")![0][0]).toStrictEqual(["my", "test", "path", "and", "testId"]);
     });
 
     it("calls collapse when when icon clicked and option open", () => {
@@ -100,6 +100,6 @@ describe("Dropdown item tests", () => {
 
         expect(mockPreventDefault.mock.calls.length).toBe(1);
         expect(mockStopPropagation.mock.calls.length).toBe(1);
-        expect(wrapper.emitted("collapse")![0][0]).toBe("/my/test/path/and/testId");
+        expect(wrapper.emitted("collapse")![0][0]).toStrictEqual(["my", "test", "path", "and", "testId"]);
     });
 });

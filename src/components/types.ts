@@ -8,13 +8,13 @@ export type FlatOption = {
     id: string,
     label: string,
     hasChildren: false,
-    path: string,
+    path: string[],
     show: boolean
 } | {
     id: string,
     label: string,
     hasChildren: true,
-    path: string,
+    path: string[],
     show: boolean,
     open: boolean
 }

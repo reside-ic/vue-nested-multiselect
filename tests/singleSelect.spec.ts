@@ -9,7 +9,7 @@ vi.mock("../src/components/utils", async () => {
         {
             id: 'id1',
             label: 'parent1',
-            path: '/id1',
+            path: ['id1'],
             show: true,
             hasChildren: true,
             open: true
@@ -17,14 +17,14 @@ vi.mock("../src/components/utils", async () => {
         {
             id: 'id1_1',
             label: 'child1',
-            path: '/id1/id1_1',
+            path: ['id1', 'id1_1'],
             show: true,
             hasChildren: false
         },
         {
             id: 'id2',
             label: 'parent2',
-            path: '/id2',
+            path: ['id2'],
             show: true,
             hasChildren: false
         },
@@ -34,7 +34,7 @@ vi.mock("../src/components/utils", async () => {
         {
             id: 'id1',
             label: 'parent1',
-            path: '/id1',
+            path: ['id1'],
             show: true,
             hasChildren: true,
             open: false
@@ -42,14 +42,14 @@ vi.mock("../src/components/utils", async () => {
         {
             id: 'id1_1',
             label: 'child1',
-            path: '/id1/id1_1',
+            path: ['id1', 'id1_1'],
             show: false,
             hasChildren: false
         },
         {
             id: 'id2',
             label: 'parent2',
-            path: '/id2',
+            path: ['id2'],
             show: true,
             hasChildren: false
         },
@@ -87,7 +87,7 @@ describe("Dropdown item tests", () => {
         {
             id: 'id1',
             label: 'parent1',
-            path: '/id1',
+            path: ['id1'],
             show: true,
             hasChildren: true,
             open: false
@@ -95,14 +95,14 @@ describe("Dropdown item tests", () => {
         {
             id: 'id1_1',
             label: 'child1',
-            path: '/id1/id1_1',
+            path: ['id1', 'id1_1'],
             show: false,
             hasChildren: false
         },
         {
             id: 'id2',
             label: 'parent2',
-            path: '/id2',
+            path: ['id2'],
             show: true,
             hasChildren: false
         },

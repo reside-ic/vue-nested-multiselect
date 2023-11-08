@@ -65,12 +65,12 @@
         showDropdownMenu.value = !showDropdownMenu.value;
       }
 
-      const expand = (optionPath: string) => {
+      const expand = (optionPath: string[]) => {
         const newFlatOptions = expandOptions(flatOptions.value, optionPath);
         flatOptions.value = newFlatOptions;
       };
 
-      const collapse = (optionPath: string) => {
+      const collapse = (optionPath: string[]) => {
         const newFlatOptions = collapseOptions(flatOptions.value, optionPath);
         flatOptions.value = newFlatOptions;
       };

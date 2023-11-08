@@ -61,7 +61,7 @@
                 }
             };
 
-            const indentation = computed(() => props.option.path.split('/').length - 2);
+            const indentation = computed(() => props.option.path.length - 1);
 
             return {
                 handleClick,
