@@ -1,5 +1,12 @@
 {
-  "name": "vue-nested-multiselect",
+  "name": "@reside-ic/vue-nested-multiselect",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reside-ic/vue-nested-multiselect.git"
+  },
+  "license": "MIT",
+  "author": "reside-ic",
+  "homepage": "https://github.com/reside-ic/vue-nested-multiselect#readme",
   "version": "0.0.1",
   "type": "module",
   "files": [

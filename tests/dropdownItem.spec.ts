@@ -2,13 +2,10 @@ import { shallowMount } from "@vue/test-utils";
 import DropdownItem from "../src/components/DropdownItem.vue";
 import VueFeather from "vue-feather";
 import { vi } from "vitest";
-import { CheckStatus, FlatOption } from "../src/components/types";
+import { CheckStatus, FlatOption } from "../src/types";
 import CheckBox from "../src/components/CheckBox.vue";
 
 describe("Dropdown item tests", () => {
-    const mockPreventDefault = vi.fn();
-    const mockStopPropagation = vi.fn();
-
     const baseOption: FlatOption = {
         hasChildren: false,
         label: "testLabel",
@@ -89,13 +86,7 @@ describe("Dropdown item tests", () => {
             open: false
         });
 
-        wrapper.vm.handleIconClick({
-            preventDefault: mockPreventDefault,
-            stopPropagation: mockStopPropagation
-        } as any);
-
-        expect(mockPreventDefault.mock.calls.length).toBe(1);
-        expect(mockStopPropagation.mock.calls.length).toBe(1);
+        wrapper.vm.handleIconClick();
         expect(wrapper.emitted("expand")![0][0]).toStrictEqual(["my", "test", "path", "and", "testId"]);
     });
 
@@ -105,13 +96,7 @@ describe("Dropdown item tests", () => {
             open: true
         });
 
-        wrapper.vm.handleIconClick({
-            preventDefault: mockPreventDefault,
-            stopPropagation: mockStopPropagation
-        } as any);
-
-        expect(mockPreventDefault.mock.calls.length).toBe(1);
-        expect(mockStopPropagation.mock.calls.length).toBe(1);
+        wrapper.vm.handleIconClick();
         expect(wrapper.emitted("collapse")![0][0]).toStrictEqual(["my", "test", "path", "and", "testId"]);
     });
 });

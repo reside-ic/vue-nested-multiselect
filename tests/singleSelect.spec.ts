@@ -63,8 +63,6 @@ vi.mock("../src/components/utils", async () => {
     }
 });
 
-const mockPreventDefault = vi.fn();
-
 describe("Dropdown item tests", () => {
     const options = [
         {
@@ -166,7 +164,7 @@ describe("Dropdown item tests", () => {
     it("expand works as expected with dropdown item emits expand", () => {
         const wrapper = getWrapper();
         const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("expand", "/id1");
+        dropdownItems[0].vm.$emit("expand", ["id1"]);
         // child should be expanded
         expect(wrapper.vm.flatOptions[1].show).toBe(true);
     });
@@ -174,10 +172,10 @@ describe("Dropdown item tests", () => {
     it("collapse works as expected", () => {
         const wrapper = getWrapper();
         const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("expand", "/id1");
+        dropdownItems[0].vm.$emit("expand", ["id1"]);
         expect(wrapper.vm.flatOptions[1].show).toBe(true);
 
-        dropdownItems[0].vm.$emit("collapse", "/id1");
+        dropdownItems[0].vm.$emit("collapse", ["id1"]);
         expect(wrapper.vm.flatOptions[1].show).toBe(false);
     });
 
@@ -187,11 +185,5 @@ describe("Dropdown item tests", () => {
         dropdownItems[0].vm.$emit("select-item", "id1_1");
         expect(wrapper.emitted("update:modelValue")![0][0]).toBe("id1_1");
         expect(wrapper.vm.showDropdownMenu).toBe(false);
-    });
-
-    it("preventDefault prevents default", () => {
-        const wrapper = getWrapper();
-        wrapper.vm.preventDefault({ preventDefault: mockPreventDefault } as any);
-        expect(mockPreventDefault.mock.calls.length).toBe(1);
     });
 });

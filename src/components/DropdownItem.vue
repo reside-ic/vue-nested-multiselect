@@ -3,7 +3,7 @@
          @click="handleClick"
          class="dropdown-item-div">
         <template v-if="option.hasChildren">
-            <div class="icon-div" @click="handleIconClick">
+            <div class="icon-div" @click.prevent.stop="handleIconClick">
                 <vue-feather type="chevron-right"
                             v-show="!option.open"
                             class="icon"/>
@@ -28,7 +28,7 @@
 <script lang="ts">
     import { PropType, defineComponent, computed } from 'vue';
     import VueFeather from "vue-feather";
-    import { FlatOption, CheckStatus } from './types';
+    import { FlatOption, CheckStatus } from '../types';
     import CheckBox from './CheckBox.vue';
 
     export default defineComponent({
@@ -51,13 +51,7 @@
                 emit("select-item", props.option.id);
             };
 
-            const handleIconClick = (event: MouseEvent) => {
-                event.preventDefault();
-
-                // to stop it from emitting select item when someone
-                // click the expand icon
-                event.stopPropagation();
-
+            const handleIconClick = () => {
                 if (props.option.hasChildren && props.option.open) {
                     emit("collapse", props.option.path);
                 } else {

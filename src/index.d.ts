@@ -1,4 +1,4 @@
-import { Option } from "./components/types";
+import { Option } from "./types";
 
 declare module "vue-nested-multiselect";
 

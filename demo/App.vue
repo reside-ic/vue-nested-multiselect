@@ -9,9 +9,9 @@
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import SingleSelect from './components/SingleSelect.vue';
-  import MultiSelect from './components/MultiSelect.vue';
-  import { Option } from "./components/types";
+  import SingleSelect from "../src/components/SingleSelect.vue";
+  import MultiSelect from "../src/components/MultiSelect.vue";
+  import { Option } from "../src/types";
 
   export default defineComponent({
     components: {
