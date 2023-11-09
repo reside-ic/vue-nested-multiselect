@@ -26,14 +26,6 @@
     export default defineComponent({
         emits: ["select-item", "expand", "collapse"],
         props: {
-            expand: {
-                type: Function as PropType<(payload: MouseEvent) => void>,
-                default: () => null
-            },
-            collapse: {
-                type: Function as PropType<(payload: MouseEvent) => void>,
-                default: () => null
-            },
             option: {
                 type: Object as PropType<FlatOption>,
                 required: true
