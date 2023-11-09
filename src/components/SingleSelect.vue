@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-  import { PropType, computed, defineComponent, ref, watch } from 'vue';
+  import { PropType, computed, defineComponent, ref } from 'vue';
   import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
   import { Option, FlatOption } from "../types";
   import DropdownItem from './DropdownItem.vue';
@@ -75,10 +75,6 @@
         emit("update:modelValue", optionId);
         showDropdownMenu.value = false;
       }
-
-      watch(flatOptions, () => {
-        console.log("update")
-      }, { deep: true });
 
       return {
         showDropdownMenu,

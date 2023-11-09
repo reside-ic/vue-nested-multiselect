@@ -28,10 +28,11 @@
 <script lang="ts">
   import { PropType, computed, defineComponent, ref } from 'vue';
   import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
-  import { Option, FlatOption, CheckStatus } from "./types";
+  import { Option, FlatOption, CheckStatus } from "../types";
   import DropdownItem from './DropdownItem.vue';
   import Tags from './Tags.vue';
-  import { flattenOptions, expandOptions, collapseOptions, createCheckedObject, getAllNestedChildrenIds, getTopLevelOptionTags } from "./utils";
+  import { expandOptions, collapseOptions, createCheckedObject, getAllNestedChildrenIds, getTopLevelOptionTags } from "../utils";
+import { getFlattenedOptions } from '../utils';
 
   export default defineComponent({
     emits: ["update:modelValue"],
@@ -57,9 +58,7 @@
       }
     },
     setup(props, { emit }) {
-      const flatOps: FlatOption[] = [];
-      flattenOptions(flatOps, props.options);
-      const flatOptions = ref(flatOps);
+      const flatOptions = ref<FlatOption[]>(getFlattenedOptions(props.options));
 
       const tagsArray = computed(() => {
         const allSelectedOptions: FlatOption[] = props.modelValue?.map(value => {
@@ -78,13 +77,11 @@
       });
 
       const expand = (optionPath: string[]) => {
-        const newFlatOptions = expandOptions(flatOptions.value, optionPath);
-        flatOptions.value = newFlatOptions;
+        expandOptions(flatOptions.value, optionPath);
       };
 
       const collapse = (optionPath: string[]) => {
-        const newFlatOptions = collapseOptions(flatOptions.value, optionPath);
-        flatOptions.value = newFlatOptions;
+        collapseOptions(flatOptions.value, optionPath);
       };
 
       const handleSelectItem = (optionId: string) => {
