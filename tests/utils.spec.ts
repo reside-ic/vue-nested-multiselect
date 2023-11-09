@@ -1,5 +1,5 @@
-import { FlatOption } from "../src/components/types";
-import { collapseOptions, expandOptions, flattenOptions } from "../src/components/utils";
+import { FlatOption } from "../src/types";
+import { collapseOptions, expandOptions, flattenOptions } from "../src/utils";
 
 describe("Utils tests", () => {
     const dummyOptions = [
@@ -98,13 +98,16 @@ describe("Utils tests", () => {
     });
 
     it("expands options", () => {
-        const array = expandOptions(flatOptions, ["id1", "id1_1"]);
+        // need to create a deep copy since we are mutating elements
+        const array = JSON.parse(JSON.stringify(flatOptions));
+        expandOptions(array, ["id1", "id1_1"]);
         const openedOption = array.find(op => op.id === "id_1_1");
         expect(openedOption?.show).toBe(true);
     });
 
     it("collapses options", () => {
-        const array = collapseOptions(flatOptionsExpanded, ["id1"]);
+        const array = JSON.parse(JSON.stringify(flatOptionsExpanded));
+        collapseOptions(array, ["id1"]);
         array.forEach(op => {
             if (op.id === "id1" || op.id === "id2") {
                 expect(op.show).toBe(true);

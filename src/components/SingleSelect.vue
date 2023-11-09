@@ -7,8 +7,8 @@
         <span class="label">{{ label || placeholder }}</span>
       </c-dropdown-toggle>
       <c-dropdown-menu class="menu"
-                       @click="preventDefault"
-                       @mousedown="preventDefault">
+                       @click.prevent
+                       @mousedown.prevent>
         <template v-for="option in flatOptions">
           <c-dropdown-item v-show="option.show" class="item">
             <dropdown-item :option="option"
@@ -22,11 +22,11 @@
 </template>
 
 <script lang="ts">
-  import { PropType, computed, defineComponent, ref } from 'vue';
+  import { PropType, computed, defineComponent, ref, watch } from 'vue';
   import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
-  import { Option, FlatOption } from "./types";
+  import { Option, FlatOption } from "../types";
   import DropdownItem from './DropdownItem.vue';
-  import { flattenOptions, expandOptions, collapseOptions } from "./utils";
+  import { expandOptions, collapseOptions, getFlattenedOptions } from "../utils";
 
   export default defineComponent({
     emits: ["update:modelValue"],
@@ -51,11 +51,9 @@
       }
     },
     setup(props, { emit }) {
-      const flatOps: FlatOption[] = [];
-      flattenOptions(flatOps, props.options);
-      const flatOptions = ref(flatOps);
+      const flatOptions = ref<FlatOption[]>(getFlattenedOptions(props.options));
 
-      const showDropdownMenu = ref<boolean | undefined>(undefined);
+      const showDropdownMenu = ref<boolean>(false);
 
       const label = computed(() => {
         return flatOptions.value.find(op => op.id === props.modelValue)?.label
@@ -66,13 +64,11 @@
       }
 
       const expand = (optionPath: string[]) => {
-        const newFlatOptions = expandOptions(flatOptions.value, optionPath);
-        flatOptions.value = newFlatOptions;
+        expandOptions(flatOptions.value, optionPath);
       };
 
       const collapse = (optionPath: string[]) => {
-        const newFlatOptions = collapseOptions(flatOptions.value, optionPath);
-        flatOptions.value = newFlatOptions;
+        collapseOptions(flatOptions.value, optionPath);
       };
 
       const handleSelectItem = (optionId: string) => {
@@ -80,9 +76,9 @@
         showDropdownMenu.value = false;
       }
 
-      const preventDefault = (event: Event) => {
-        event.preventDefault();
-      }
+      watch(flatOptions, () => {
+        console.log("update")
+      }, { deep: true });
 
       return {
         showDropdownMenu,
@@ -91,7 +87,6 @@
         expand,
         collapse,
         handleSelectItem,
-        preventDefault,
         toggleDropdownMenu
       }
     },
@@ -133,4 +128,4 @@
   overflow-wrap: break-word;
   text-align: left;
 }
-</style>
+</style>../utils

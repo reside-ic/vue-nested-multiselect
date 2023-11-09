@@ -7,8 +7,8 @@
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import SingleSelect from './components/SingleSelect.vue';
-  import { Option } from "./components/types";
+  import SingleSelect from "../src/components/SingleSelect.vue";
+  import { Option } from "../src/components/types";
 
   export default defineComponent({
     components: {
