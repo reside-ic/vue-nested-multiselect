@@ -1,11 +1,8 @@
 import { mount } from "@vue/test-utils";
 import Tags from "../src/components/Tags.vue";
 import { CButton } from "@coreui/vue";
-import { vi } from "vitest";
-describe("Tag tests", () => {
-    const mockPreventDefault = vi.fn();
-    const mockStopPropagation = vi.fn();
 
+describe("Tag tests", () => {
     const tagsProp = [
         {
             id: "id1",
@@ -40,15 +37,5 @@ describe("Tag tests", () => {
             tag.trigger("click");
             expect(wrapper.emitted("select-tag")![0][0]).toBe(tagsProp[index].id);
         }));
-    });
-
-    it("prevents default and stops propagation when tag clicked", () => {
-        const wrapper = getWrapper();
-        wrapper.vm.handleTagClick({
-            preventDefault: mockPreventDefault,
-            stopPropagation: mockStopPropagation
-        } as any, "whatever");
-        expect(mockPreventDefault.mock.calls.length).toBe(1);
-        expect(mockStopPropagation.mock.calls.length).toBe(1);
     });
 });

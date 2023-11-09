@@ -4,6 +4,7 @@ import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreu
 import DropdownItem from "../src/components/DropdownItem.vue";
 import { vi } from "vitest";
 import Tags from "../src/components/Tags.vue";
+import { CheckStatus } from "../src/types";
 
 vi.mock("../src/components/utils", async () => {
     const flatOptionsExpanded = [
@@ -92,7 +93,13 @@ describe("Dropdown item tests", () => {
                 },
                 {
                     id: "id1_2",
-                    label: "child2"
+                    label: "child2",
+                    children: [
+                        {
+                            id: "id1_2_1",
+                            label: "grandchild1"
+                        }
+                    ]
                 }
             ]
         },
@@ -122,6 +129,14 @@ describe("Dropdown item tests", () => {
             id: 'id1_2',
             label: 'child2',
             path: ['id1', 'id1_2'],
+            show: false,
+            hasChildren: true,
+            open: false
+        },
+        {
+            id: 'id1_2_1',
+            label: 'grandchild1',
+            path: ['id1', 'id1_2', 'id1_2_1'],
             show: false,
             hasChildren: false
         },
@@ -163,14 +178,15 @@ describe("Dropdown item tests", () => {
         expect(cDropdownToggle.findComponent(Tags).exists()).toBe(false);
 
         const cDropdownMenu = wrapper.findComponent(CDropdownMenu);
-        expect(cDropdownMenu.exists());
+        expect(cDropdownMenu.exists()).toBe(true);
         expect(cDropdownMenu.classes()).toContain("menu");
 
         const cDropdownItems = wrapper.findAllComponents(CDropdownItem);
-        expect(cDropdownItems.every((item, index) => index === 1 || index === 2 ?
+        expect(cDropdownItems.length).toBe(5);
+        expect(cDropdownItems.every((item, index) => [1, 2, 3].includes(index) ?
                                                      !item.isVisible() :
-                                                     item.isVisible()));
-        expect(cDropdownItems.every(item => expect(item.classes()).toContain("item")));
+                                                     item.isVisible())).toBe(true);
+        cDropdownItems.forEach(item => expect(item.classes()).toContain("item"));
 
         const dropdownItem = wrapper.findAllComponents(DropdownItem);
         dropdownItem.forEach((item, index) => {
@@ -178,8 +194,8 @@ describe("Dropdown item tests", () => {
         });
     });
 
-    it("sets tags as expected", () => {
-        const wrapper = getWrapper(["id1"]);
+    it("sets top level tags as expected", () => {
+        const wrapper = getWrapper(["id1_1", "id1_2"]);
         const tag = wrapper.findComponent(Tags);
         expect(tag.props("tags")).toStrictEqual([
             {
@@ -189,10 +205,21 @@ describe("Dropdown item tests", () => {
         ])
     });
 
+    it("gets checked object as expected", () => {
+        const wrapper = getWrapper(["id2", "id1_2_1"]);
+        expect(wrapper.vm.checkedObject).toStrictEqual({
+            "id1": CheckStatus.PARTIAL,
+            "id1/id1_1": CheckStatus.UNCHECKED,
+            "id1/id1_2": CheckStatus.CHECKED,
+            "id1/id1_2/id1_2_1": CheckStatus.CHECKED,
+            "id2": CheckStatus.CHECKED
+        });
+    });
+
     it("expand works as expected with dropdown item emits expand", () => {
         const wrapper = getWrapper();
         const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("expand", "/id1");
+        dropdownItems[0].vm.$emit("expand", ["id1"]);
         expect(wrapper.vm.flatOptions[1].show).toBe(true);
         expect(wrapper.vm.flatOptions[2].show).toBe(true);
     });
@@ -200,25 +227,54 @@ describe("Dropdown item tests", () => {
     it("collapse works as expected", () => {
         const wrapper = getWrapper();
         const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("expand", "/id1");
+        dropdownItems[0].vm.$emit("expand", ["id1"]);
         expect(wrapper.vm.flatOptions[1].show).toBe(true);
         expect(wrapper.vm.flatOptions[2].show).toBe(true);
 
-        dropdownItems[0].vm.$emit("collapse", "/id1");
+        dropdownItems[0].vm.$emit("collapse", ["id1"]);
         expect(wrapper.vm.flatOptions[1].show).toBe(false);
         expect(wrapper.vm.flatOptions[2].show).toBe(false);
     });
 
-    it("handleSelectItem works as expected", () => {
-        const wrapper = getWrapper();
-        const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("select-item", "id1_1");
+    /*
+    4 cases to test for handle select item:
+        1. option has children and it is (partially) checked
+        2. option has children and it is unchecked
+        3. no children and checked
+        4. children and unchecked
+    */
+    it("handleSelectItem works as expected in case 1", () => {
+        const wrapper = getWrapper(["id1", "id1_1", "id1_2", "id1_2_1"]);
+        const dropdownItem = wrapper.findComponent(DropdownItem);
+        // doesnt actually matter which one we emit from so
+        // pretend this is dropdown item for id1_2 
+        dropdownItem.vm.$emit("select-item", "id1_2");
+
+        // should remove its child and parent
         expect(wrapper.emitted("update:modelValue")![0][0]).toStrictEqual(["id1_1"]);
     });
 
-    it("preventDefault prevents default", () => {
+    it("handleSelectItem works as expected in case 2", () => {
         const wrapper = getWrapper();
-        wrapper.vm.preventDefault({ preventDefault: mockPreventDefault } as any);
-        expect(mockPreventDefault.mock.calls.length).toBe(1);
+        const dropdownItem = wrapper.findComponent(DropdownItem);
+        dropdownItem.vm.$emit("select-item", "id1");
+        // all children should be selected
+        expect(wrapper.emitted("update:modelValue")![0][0]).toStrictEqual(["id1", "id1_1", "id1_2", "id1_2_1"]);
+    });
+
+    it("handleSelectItem works as expected in case 3", () => {
+        const wrapper = getWrapper(["id2", "id1_2_1"]);
+        const dropdownItem = wrapper.findComponent(DropdownItem);
+        dropdownItem.vm.$emit("select-item", "id2");
+        // uncheck the option
+        expect(wrapper.emitted("update:modelValue")![0][0]).toStrictEqual(["id1_2_1"]);
+    });
+
+    it("handleSelectItem works as expected in case 4", () => {
+        const wrapper = getWrapper(["id1_2_1"]);
+        const dropdownItem = wrapper.findComponent(DropdownItem);
+        dropdownItem.vm.$emit("select-item", "id2");
+        // check the option
+        expect(wrapper.emitted("update:modelValue")![0][0]).toStrictEqual(["id1_2_1", "id2"]);
     });
 });

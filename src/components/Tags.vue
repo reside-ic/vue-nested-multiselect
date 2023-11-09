@@ -1,7 +1,7 @@
 <template>
     <span class="tag-div">
         <template v-for="tag in tags">
-            <c-button @click="(event: MouseEvent) => handleTagClick(event, tag.id)"
+            <c-button @click.prevent.stop="() => handleTagClick(tag.id)"
                         class="tag">{{ tag.label }}</c-button>
         </template>
     </span>
@@ -9,7 +9,7 @@
 
 <script lang="ts">
     import { PropType, defineComponent } from 'vue';
-    import { Tag } from './types';
+    import { Tag } from '../types';
     import { CButton } from "@coreui/vue";
 
     export default defineComponent({
@@ -24,9 +24,7 @@
             CButton
         },
         setup(_, { emit }) {
-            const handleTagClick = (event: MouseEvent, tagId: string) => {
-                event.preventDefault();
-                event.stopPropagation();
+            const handleTagClick = (tagId: string) => {
                 emit("select-tag", tagId);
             };
 
@@ -39,8 +37,8 @@
 
 <style scoped>
 .tag-div > .btn {
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   padding-left: 0.4rem;
   padding-right: 0.4rem;
 }

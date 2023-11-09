@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import { CheckStatus } from "../src/components/types";
+import { CheckStatus } from "../src/types";
 import CheckBox from "../src/components/CheckBox.vue";
 import { CButton } from "@coreui/vue";
 import VueFeather from "vue-feather";

@@ -16,7 +16,7 @@
 
 <script lang="ts">
     import { PropType, defineComponent } from 'vue';
-    import { CheckStatus } from './types';
+    import { CheckStatus } from '../types';
     import { CButton } from "@coreui/vue";
     import VueFeather from "vue-feather";
 

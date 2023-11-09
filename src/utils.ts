@@ -72,26 +72,23 @@ export const collapseOptions = (array: FlatOption[], optionPath: string[]) => {
     };
 };
 
-export const getAllNestedChildrenIds = (flatOptions: FlatOption[], ids: string[]) => {
-    const childrenIds: string[] = [];
-    const parentOptions = ids.map(id => {
-        return flatOptions.find(op => op.id === id)!
+export const getNestedChildrenIds = (flatOptions: FlatOption[], ids: string[]) => {
+    const childrenIds: string[] = [...ids];
+    const parentOptions: [FlatOption, number][] = ids.map(id => {
+        const index = flatOptions.findIndex(op => op.id === id);
+        // we can start at the next index since we are already copying
+        // ids into childrenIds
+        return [flatOptions[index], index + 1];
     });
 
-    flatOptions.forEach(op => {
-        if (ids.includes(op.id)) {
-            childrenIds.push(op.id);
-            return
-        }
-
-        // an option is a nested child if a parent option's path
-        // is a prefix of its path
-        const isNestedChild = parentOptions.some(parentOp => {
-            return arraysAreEqual(parentOp.path, op.path.slice(0, parentOp.path.length));
-        });
-
-        if (isNestedChild) {
-            childrenIds.push(op.id);
+    parentOptions.forEach(([parentOp, index]) => {
+        let currentIndex = index;
+        while (currentIndex < flatOptions.length && flatOptions[currentIndex].path.length > parentOp.path.length) {
+            const currentId = flatOptions[currentIndex].id;
+            if (!childrenIds.includes(currentId)) {
+                childrenIds.push(currentId);
+            }
+            currentIndex++;
         }
     });
     return childrenIds;
@@ -102,7 +99,6 @@ type ChildCheckedInfo = {
     unchecked: number,
     partial: number
 }
-
 type ChildCheckedRecord = Record<string, ChildCheckedInfo>
 
 
@@ -118,7 +114,7 @@ const recordChildStatus = (parentId: string | undefined, record: ChildCheckedRec
     }
 };
 
-export const createCheckedObject = (flatOptions: FlatOption[], checkedValues: string[]): CheckObject => {
+export const getCheckedObject = (flatOptions: FlatOption[], checkedValues: string[]): CheckObject => {
     const checkedObject: CheckObject = {};
     flatOptions.forEach(op => {
         checkedObject[op.path.join("/")] = CheckStatus.UNCHECKED;

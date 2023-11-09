@@ -4,14 +4,14 @@
                 class="dropdown">
       <c-dropdown-toggle>
         <template v-if="tagsArray.length > 0">
-          <tags :tags="tagsArray" @select-tag="handleTagSelect"/>
+          <tags :tags="tagsArray" @select-tag="handleSelectItem"/>
         </template>
         <span v-if="tagsArray.length === 0"
               class="placeholder-span">{{ placeholder }}</span>
       </c-dropdown-toggle>
       <c-dropdown-menu class="menu"
-                       @click="preventDefault"
-                       @mousedown="preventDefault">
+                       @click.prevent
+                       @mousedown.prevent>
         <template v-for="option in flatOptions">
           <c-dropdown-item v-show="option.show" class="item">
             <dropdown-item :option="option"
@@ -31,8 +31,7 @@
   import { Option, FlatOption, CheckStatus } from "../types";
   import DropdownItem from './DropdownItem.vue';
   import Tags from './Tags.vue';
-  import { expandOptions, collapseOptions, createCheckedObject, getAllNestedChildrenIds, getTopLevelOptionTags } from "../utils";
-import { getFlattenedOptions } from '../utils';
+  import { expandOptions, collapseOptions, getCheckedObject, getNestedChildrenIds, getTopLevelOptionTags, getFlattenedOptions } from "../utils";
 
   export default defineComponent({
     emits: ["update:modelValue"],
@@ -67,13 +66,9 @@ import { getFlattenedOptions } from '../utils';
         return getTopLevelOptionTags(allSelectedOptions, flatOptions.value, checkedObject.value);
       });
 
-      const handleTagSelect = (optionId: string) => {
-        handleSelectItem(optionId);
-      };
-
       const checkedObject = computed(() => {
-        const childrenIds = getAllNestedChildrenIds(flatOptions.value, props.modelValue || []);
-        return createCheckedObject(flatOptions.value, childrenIds);
+        const childrenIds = getNestedChildrenIds(flatOptions.value, props.modelValue || []);
+        return getCheckedObject(flatOptions.value, childrenIds);
       });
 
       const expand = (optionPath: string[]) => {
@@ -89,7 +84,7 @@ import { getFlattenedOptions } from '../utils';
         const checkStatus = checkedObject.value[option.path.join("/")];
         // The are 4 cases, each emit will have an explantion of the case above it
         if (option.hasChildren) {
-          const childrenIds = getAllNestedChildrenIds(flatOptions.value, [optionId]);
+          const childrenIds = getNestedChildrenIds(flatOptions.value, [optionId]);
           if (checkStatus === CheckStatus.CHECKED || checkStatus === CheckStatus.PARTIAL) {
             const parentIds = option.path;
             const uncheckIds = [...childrenIds, ...parentIds];
@@ -107,9 +102,9 @@ import { getFlattenedOptions } from '../utils';
             emit("update:modelValue", [...props.modelValue || [], ...childrenIds]);
           }
         } else {
-          if (checkStatus === CheckStatus.CHECKED || checkStatus === CheckStatus.PARTIAL) {
+          if (checkStatus === CheckStatus.CHECKED) {
             const parentIds = option.path;
-            // This case is if an option doesn't have children and is checked (or partially checked).
+            // This case is if an option doesn't have children and is checked.
             // We remove parents from being checked since not all their children are checked anymore.
             emit("update:modelValue", [...props.modelValue?.filter(val => !parentIds.includes(val)) || []]);
           } else {
@@ -120,19 +115,13 @@ import { getFlattenedOptions } from '../utils';
         }
       }
 
-      const preventDefault = (event: Event) => {
-        event.preventDefault();
-      }
-
       return {
         tagsArray,
         flatOptions,
         expand,
         collapse,
         handleSelectItem,
-        preventDefault,
-        checkedObject,
-        handleTagSelect
+        checkedObject
       }
     }
   });
@@ -164,10 +153,5 @@ import { getFlattenedOptions } from '../utils';
 
 .dropdown-toggle::after {
   margin-left: auto;
-}
-
-.placeholder-span {
-  margin-top: 1px;
-  margin-bottom: 1px;
 }
 </style>
