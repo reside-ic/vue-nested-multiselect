@@ -12,6 +12,13 @@
                             class="icon"/>
             </div>
         </template>
+
+        <template v-if="checked !== undefined">
+            <div class="check-div">
+                <check-box :checked="checked"/>
+            </div>
+        </template>
+
         <div class="text-div">
             <span>{{ option.label }}</span>
         </div>
@@ -21,7 +28,8 @@
 <script lang="ts">
     import { PropType, defineComponent, computed } from 'vue';
     import VueFeather from "vue-feather";
-    import { FlatOption } from '../types';
+    import { FlatOption, CheckStatus } from '../types';
+    import CheckBox from './CheckBox.vue';
 
     export default defineComponent({
         emits: ["select-item", "expand", "collapse"],
@@ -29,10 +37,14 @@
             option: {
                 type: Object as PropType<FlatOption>,
                 required: true
+            },
+            checked: {
+                type: Number as PropType<CheckStatus>
             }
         },
         components: {
-            VueFeather
+            VueFeather,
+            CheckBox
         },
         setup(props, { emit }) {
             const handleClick = () => {
@@ -63,7 +75,6 @@
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-right: 0.4rem;
-    align-items: center;
 }
 
 .icon {
@@ -74,6 +85,12 @@
 
 .icon-div:hover {
     color: red;
+}
+
+.check-div {
+    padding-top: 0.4rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.2rem;
 }
 
 .text-div {

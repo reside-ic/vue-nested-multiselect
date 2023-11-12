@@ -137,7 +137,9 @@ describe("Dropdown item tests", () => {
         expect(cDropdownMenu.classes()).toContain("menu");
 
         const cDropdownItems = wrapper.findAllComponents(CDropdownItem);
-        expect(cDropdownItems.every(item => item.isVisible())).toBe(true);
+        // middle item is a child so not visible right now
+        expect(cDropdownItems.every((item, index) => index === 1 ? !item.isVisible() : item.isVisible()))
+            .toBe(true);
         expect(cDropdownItems.every(item => expect(item.classes()).toContain("item"))).toBe(true);
 
         const dropdownItem = wrapper.findAllComponents(DropdownItem);

@@ -18,3 +18,14 @@ export type FlatOption = {
     show: boolean,
     open: boolean
 }
+
+export enum CheckStatus {
+    CHECKED, UNCHECKED, PARTIAL
+}
+
+export type CheckObject = Record<string, CheckStatus>
+
+export type Tag = {
+    id: string, 
+    label: string
+}

@@ -2,7 +2,8 @@ import { shallowMount } from "@vue/test-utils";
 import DropdownItem from "../src/components/DropdownItem.vue";
 import VueFeather from "vue-feather";
 import { vi } from "vitest";
-import { FlatOption } from "../src/types";
+import { CheckStatus, FlatOption } from "../src/types";
+import CheckBox from "../src/components/CheckBox.vue";
 
 describe("Dropdown item tests", () => {
     const baseOption: FlatOption = {
@@ -13,13 +14,14 @@ describe("Dropdown item tests", () => {
         show: false
     }
 
-    const getWrapper = (options) => {
+    const getWrapper = (options, checked: CheckStatus | undefined = undefined) => {
         return shallowMount(DropdownItem, {
             props: {
                 option: {
                     ...baseOption,
                     ...options
-                }
+                },
+                checked
             }
         });
     };
@@ -48,6 +50,9 @@ describe("Dropdown item tests", () => {
         expect(chevronDown.props("type")).toBe("chevron-down");
         expect(chevronDown.classes()).toContain("icon");
 
+        const checkDiv = dropdownItemDiv.findComponent(CheckBox);
+        expect(checkDiv.exists()).toBe(false);
+
         expect(textDiv.classes()).toContain("text-div");
         expect(textDiv.find("span").text()).toBe("testLabel");
     });
@@ -55,6 +60,13 @@ describe("Dropdown item tests", () => {
     it("does not render icons if no children", () => {
         const wrapper = getWrapper({});
         expect(wrapper.findAllComponents(VueFeather)).toStrictEqual([]);
+    });
+
+    it("renders check mark if checked", () => {
+        const wrapper = getWrapper({}, CheckStatus.UNCHECKED);
+        const checkDiv = wrapper.find(".check-div");
+        expect(checkDiv.exists()).toBe(true);
+        expect(checkDiv.findComponent(CheckBox).exists()).toBe(true);
     });
 
     it("emits value when clicked", () => {
