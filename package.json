@@ -39,7 +39,7 @@
     "vue-feather": "^2.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.7",
+    "@types/jest": "^29.5.8",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.4.1",
     "jsdom": "^22.1.0",

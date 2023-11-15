@@ -1,86 +1,9 @@
 import { mount } from "@vue/test-utils";
 import MultiSelect from "../src/components/MultiSelect.vue";
-import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
 import DropdownItem from "../src/components/DropdownItem.vue";
-import { vi } from "vitest";
 import Tags from "../src/components/Tags.vue";
 import { CheckStatus } from "../src/types";
 import BaseSelect from "../src/components/BaseSelect.vue";
-
-vi.mock("../src/components/utils", async () => {
-    const flatOptionsExpanded = [
-        {
-            id: 'id1',
-            label: 'parent1',
-            path: ['id1'],
-            show: true,
-            hasChildren: true,
-            open: true
-        },
-        {
-            id: 'id1_1',
-            label: 'child1',
-            path: ['id1', 'id1_1'],
-            show: true,
-            hasChildren: false
-        },
-        {
-            id: 'id1_2',
-            label: 'child2',
-            path: ['id1', 'id1_2'],
-            show: true,
-            hasChildren: false
-        },
-        {
-            id: 'id2',
-            label: 'parent2',
-            path: ['id2'],
-            show: true,
-            hasChildren: false
-        },
-    ];
-
-    const flatOptionsCollapsed = [
-        {
-            id: 'id1',
-            label: 'parent1',
-            path: ['id1'],
-            show: true,
-            hasChildren: true,
-            open: false
-        },
-        {
-            id: 'id1_1',
-            label: 'child1',
-            path: ['id1', 'id1_1'],
-            show: false,
-            hasChildren: false
-        },
-        {
-            id: 'id1_2',
-            label: 'child2',
-            path: ['id1', 'id1_2'],
-            show: false,
-            hasChildren: false
-        },
-        {
-            id: 'id2',
-            label: 'parent2',
-            path: ['id2'],
-            show: true,
-            hasChildren: false
-        },
-    ];
-
-    const actual = await vi.importActual("../src/components/utils") as any;
-    return {
-        ...actual,
-        expandOptions: () => flatOptionsExpanded,
-        collapseOptions: () => flatOptionsCollapsed
-    }
-});
-
-const mockPreventDefault = vi.fn();
 
 describe("Multi select tests", () => {
     const options = [
@@ -117,50 +40,6 @@ describe("Multi select tests", () => {
         "id1/id1_2/id1_2_1": CheckStatus.UNCHECKED,
         "id2": CheckStatus.UNCHECKED
     }
-
-    const flatOptions = [
-        {
-            id: 'id1',
-            label: 'parent1',
-            path: ['id1'],
-            show: true,
-            hasChildren: true,
-            open: false
-        },
-        {
-            id: 'id1_1',
-            label: 'child1',
-            path: ['id1', 'id1_1'],
-            show: false,
-            hasChildren: false
-        },
-        {
-            id: 'id1_2',
-            label: 'child2',
-            path: ['id1', 'id1_2'],
-            show: false,
-            hasChildren: true,
-            open: false
-        },
-        {
-            id: 'id1_2_1',
-            label: 'grandchild1',
-            path: ['id1', 'id1_2', 'id1_2_1'],
-            show: false,
-            hasChildren: false
-        },
-        {
-            id: 'id2',
-            label: 'parent2',
-            path: ['id2'],
-            show: true,
-            hasChildren: false
-        },
-    ]
-
-    afterEach(() => {
-        vi.resetAllMocks();
-    });
 
     const getWrapper = (ids: string[] | undefined = undefined, placeholder = undefined) => {
         return mount(MultiSelect, {
