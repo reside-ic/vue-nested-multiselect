@@ -1,67 +1,6 @@
 import { mount } from "@vue/test-utils";
 import SingleSelect from "../src/components/SingleSelect.vue";
-import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
-import DropdownItem from "../src/components/DropdownItem.vue";
-import { vi } from "vitest";
-
-vi.mock("../src/components/utils", async () => {
-    const flatOptionsExpanded = [
-        {
-            id: 'id1',
-            label: 'parent1',
-            path: ['id1'],
-            show: true,
-            hasChildren: true,
-            open: true
-        },
-        {
-            id: 'id1_1',
-            label: 'child1',
-            path: ['id1', 'id1_1'],
-            show: true,
-            hasChildren: false
-        },
-        {
-            id: 'id2',
-            label: 'parent2',
-            path: ['id2'],
-            show: true,
-            hasChildren: false
-        },
-    ]
-
-    const flatOptionsCollapsed = [
-        {
-            id: 'id1',
-            label: 'parent1',
-            path: ['id1'],
-            show: true,
-            hasChildren: true,
-            open: false
-        },
-        {
-            id: 'id1_1',
-            label: 'child1',
-            path: ['id1', 'id1_1'],
-            show: false,
-            hasChildren: false
-        },
-        {
-            id: 'id2',
-            label: 'parent2',
-            path: ['id2'],
-            show: true,
-            hasChildren: false
-        },
-    ]
-
-    const actual = await vi.importActual("../src/components/utils") as any;
-    return {
-        ...actual,
-        expandOptions: () => flatOptionsExpanded,
-        collapseOptions: () => flatOptionsCollapsed
-    }
-});
+import BaseSelect from "../src/components/BaseSelect.vue";
 
 describe("Dropdown item tests", () => {
     const options = [
@@ -81,35 +20,6 @@ describe("Dropdown item tests", () => {
         }
     ];
 
-    const flatOptions = [
-        {
-            id: 'id1',
-            label: 'parent1',
-            path: ['id1'],
-            show: true,
-            hasChildren: true,
-            open: false
-        },
-        {
-            id: 'id1_1',
-            label: 'child1',
-            path: ['id1', 'id1_1'],
-            show: false,
-            hasChildren: false
-        },
-        {
-            id: 'id2',
-            label: 'parent2',
-            path: ['id2'],
-            show: true,
-            hasChildren: false
-        },
-    ]
-
-    afterEach(() => {
-        vi.resetAllMocks();
-    });
-
     const getWrapper = (id: string | undefined = undefined, placeholder = undefined) => {
         return mount(SingleSelect, {
             props: {
@@ -123,66 +33,40 @@ describe("Dropdown item tests", () => {
     it("renders as expected", async () => {
         const wrapper = getWrapper();
 
-        const cDropdown = wrapper.findComponent(CDropdown);
-        expect(cDropdown.props("autoClose")).toBe("outside");
-        expect(cDropdown.props("popper")).toBe(false);
-        expect(cDropdown.classes()).toContain("dropdown");
+        const baseSelect = wrapper.findComponent(BaseSelect);
+        expect(baseSelect.props("options")).toStrictEqual(options);
+        expect(baseSelect.props("showDropdownMenu")).toBe(false);
 
-        const cDropdownToggle = wrapper.findComponent(CDropdownToggle);
-        expect(cDropdownToggle.find("span").text()).toBe("Select...");
-        expect(cDropdownToggle.find("span").classes()).toContain("label");
-
-        const cDropdownMenu = wrapper.findComponent(CDropdownMenu);
-        expect(cDropdownMenu.exists()).toBe(true);
-        expect(cDropdownMenu.classes()).toContain("menu");
-
-        const cDropdownItems = wrapper.findAllComponents(CDropdownItem);
-        // middle item is a child so not visible right now
-        expect(cDropdownItems.every((item, index) => index === 1 ? !item.isVisible() : item.isVisible()))
-            .toBe(true);
-        expect(cDropdownItems.every(item => expect(item.classes()).toContain("item"))).toBe(true);
-
-        const dropdownItem = wrapper.findAllComponents(DropdownItem);
-        dropdownItem.forEach((item, index) => {
-            expect(item.props("option")).toStrictEqual(flatOptions[index]);
-        });
+        const label = baseSelect.find(".label");
+        expect(label.text()).toBe("Select...");
     });
 
     it("sets label as expected", () => {
         const wrapper = getWrapper("id1_1");
-        const cDropdownToggle = wrapper.findComponent(CDropdownToggle);
-        expect(cDropdownToggle.find("span").text()).toBe("child1");
+        const label = wrapper.find(".label");
+        expect(label.text()).toBe("child1");
     });
 
-    it("toggle dropdown menu toggles show", () => {
+    it("toggle click toggles showDropdownMenu", () => {
         const wrapper = getWrapper();
+        const baseSelect = wrapper.findComponent(BaseSelect);
+        baseSelect.vm.$emit("toggle-click");
+        // is false by default
+        expect(wrapper.vm.showDropdownMenu).toBe(true);
+    });
+
+    it("show dropdown menu is set to false when menu hides", () => {
+        const wrapper = getWrapper();
+        const baseSelect = wrapper.findComponent(BaseSelect);
         wrapper.vm.showDropdownMenu = true;
-        wrapper.vm.toggleDropdownMenu();
+        baseSelect.vm.$emit("hide");
         expect(wrapper.vm.showDropdownMenu).toBe(false);
     });
 
-    it("expand works as expected with dropdown item emits expand", () => {
+    it("select item event correctly triggers handleSelectItem", () => {
         const wrapper = getWrapper();
-        const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("expand", ["id1"]);
-        // child should be expanded
-        expect(wrapper.vm.flatOptions[1].show).toBe(true);
-    });
-
-    it("collapse works as expected", () => {
-        const wrapper = getWrapper();
-        const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("expand", ["id1"]);
-        expect(wrapper.vm.flatOptions[1].show).toBe(true);
-
-        dropdownItems[0].vm.$emit("collapse", ["id1"]);
-        expect(wrapper.vm.flatOptions[1].show).toBe(false);
-    });
-
-    it("handleSelectItem works as expected", () => {
-        const wrapper = getWrapper();
-        const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("select-item", "id1_1");
+        const baseSelect = wrapper.findComponent(BaseSelect);
+        baseSelect.vm.$emit("select-item", "id1_1");
         expect(wrapper.emitted("update:modelValue")![0][0]).toBe("id1_1");
         expect(wrapper.vm.showDropdownMenu).toBe(false);
     });

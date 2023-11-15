@@ -1,47 +1,30 @@
 <template>
-    <c-dropdown auto-close="outside"
-                :popper="false"
-                class="dropdown">
-      <c-dropdown-toggle>
-        <template v-if="tagsArray.length > 0">
-          <tags :tags="tagsArray" @select-tag="handleSelectItem"/>
-        </template>
-        <span v-if="tagsArray.length === 0"
-              class="placeholder-span">{{ placeholder }}</span>
-      </c-dropdown-toggle>
-      <c-dropdown-menu class="menu"
-                       @click.prevent
-                       @mousedown.prevent>
-        <template v-for="option in flatOptions">
-          <c-dropdown-item v-show="option.show" class="item">
-            <dropdown-item :option="option"
-                           :checked="checkedObject[option.path.join('/')]"
-                           @expand="expand"
-                           @collapse="collapse"
-                           @select-item="handleSelectItem"></dropdown-item>
-          </c-dropdown-item>
-        </template>
-      </c-dropdown-menu>
-    </c-dropdown>
+  <base-select :options="options"
+               :checked-object="checkedObject"
+               @select-item="handleSelectItem">
+    <template v-slot>
+      <template v-if="tagsArray.length > 0">
+        <tags :tags="tagsArray" @select-tag="handleSelectItem"/>
+      </template>
+      <span v-if="tagsArray.length === 0"
+            class="placeholder-span">{{ placeholder }}</span>  
+    </template>
+  </base-select>
 </template>
 
 <script lang="ts">
-  import { PropType, computed, defineComponent, ref } from 'vue';
-  import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
+  import { PropType, computed, defineComponent } from 'vue';
   import { Option, FlatOption, CheckStatus } from "../types";
-  import DropdownItem from './DropdownItem.vue';
   import Tags from './Tags.vue';
-  import { expandOptions, collapseOptions, getCheckedObject, getNestedChildrenIds, getTopLevelOptionTags, getFlattenedOptions } from "../utils";
+  import { getCheckedObject, getNestedChildrenIds, getTopLevelOptionTags } from "../utils";
+  import useBaseSelect from '../mixins/useBaseSelect';
+  import BaseSelect from './BaseSelect.vue';
 
   export default defineComponent({
     emits: ["update:modelValue"],
     components: {
-      CDropdown,
-      CDropdownToggle,
-      CDropdownItem,
-      CDropdownMenu,
-      DropdownItem,
-      Tags
+      Tags,
+      BaseSelect
     },
     props: {
       options: {
@@ -57,7 +40,7 @@
       }
     },
     setup(props, { emit }) {
-      const flatOptions = ref<FlatOption[]>(getFlattenedOptions(props.options));
+      const { flatOptions } = useBaseSelect(props.options);
 
       const tagsArray = computed(() => {
         const allSelectedOptions: FlatOption[] = props.modelValue?.map(value => {
@@ -70,14 +53,6 @@
         const childrenIds = getNestedChildrenIds(flatOptions.value, props.modelValue || []);
         return getCheckedObject(flatOptions.value, childrenIds);
       });
-
-      const expand = (optionPath: string[]) => {
-        expandOptions(flatOptions.value, optionPath);
-      };
-
-      const collapse = (optionPath: string[]) => {
-        collapseOptions(flatOptions.value, optionPath);
-      };
 
       const handleSelectItem = (optionId: string) => {
         const option = flatOptions.value.find(op => op.id === optionId)!;
@@ -117,41 +92,9 @@
 
       return {
         tagsArray,
-        flatOptions,
-        expand,
-        collapse,
         handleSelectItem,
         checkedObject
       }
     }
   });
 </script>
-
-<style scoped>
-.dropdown {
-  width: 100%;
-}
-
-.menu {
-  width: 100%;
-}
-
-.item {
-  padding: 0;
-  display: flex; 
-}
-
-.item:hover {
-  cursor: pointer;
-}
-
-.dropdown-toggle {
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.dropdown-toggle::after {
-  margin-left: auto;
-}
-</style>

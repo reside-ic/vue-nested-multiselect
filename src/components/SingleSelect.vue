@@ -1,41 +1,23 @@
 <template>
-    <c-dropdown auto-close="outside"
-                class="dropdown"
-                :popper="false"
-                :visible="showDropdownMenu">
-      <c-dropdown-toggle @click="toggleDropdownMenu">
-        <span class="label">{{ label || placeholder }}</span>
-      </c-dropdown-toggle>
-      <c-dropdown-menu class="menu"
-                       @click.prevent
-                       @mousedown.prevent>
-        <template v-for="option in flatOptions">
-          <c-dropdown-item v-show="option.show" class="item">
-            <dropdown-item :option="option"
-                           @expand="expand"
-                           @collapse="collapse"
-                           @select-item="handleSelectItem"></dropdown-item>
-          </c-dropdown-item>
-        </template>
-      </c-dropdown-menu>
-    </c-dropdown>
+  <base-select :options="options"
+               :show-dropdown-menu="showDropdownMenu"
+               @hide="() => showDropdownMenu = false"
+               @toggle-click="toggleDropdownMenu"
+               @select-item="handleSelectItem">
+    <span class="label">{{ label || placeholder }}</span>
+  </base-select>
 </template>
 
 <script lang="ts">
   import { PropType, computed, defineComponent, ref } from 'vue';
-  import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
-  import { Option, FlatOption } from "../types";
-  import DropdownItem from './DropdownItem.vue';
-  import { expandOptions, collapseOptions, getFlattenedOptions } from "../utils";
+  import { Option } from "../types";
+  import useBaseSelect from '../mixins/useBaseSelect';
+  import BaseSelect from './BaseSelect.vue';
 
   export default defineComponent({
     emits: ["update:modelValue"],
     components: {
-      CDropdown,
-      CDropdownToggle,
-      CDropdownItem,
-      CDropdownMenu,
-      DropdownItem
+      BaseSelect
     },
     props: {
       options: {
@@ -51,72 +33,34 @@
       }
     },
     setup(props, { emit }) {
-      const flatOptions = ref<FlatOption[]>(getFlattenedOptions(props.options));
+      const { flatOptions } = useBaseSelect(props.options);
 
       const showDropdownMenu = ref<boolean>(false);
+      const toggleDropdownMenu = () => {
+        showDropdownMenu.value = !showDropdownMenu.value;
+      }
 
       const label = computed(() => {
         return flatOptions.value.find(op => op.id === props.modelValue)?.label
       });
 
-      const toggleDropdownMenu = () => {
-        showDropdownMenu.value = !showDropdownMenu.value;
-      }
-
-      const expand = (optionPath: string[]) => {
-        expandOptions(flatOptions.value, optionPath);
-      };
-
-      const collapse = (optionPath: string[]) => {
-        collapseOptions(flatOptions.value, optionPath);
-      };
-
       const handleSelectItem = (optionId: string) => {
         emit("update:modelValue", optionId);
         showDropdownMenu.value = false;
-      }
+      };
 
       return {
-        showDropdownMenu,
-        label,
         flatOptions,
-        expand,
-        collapse,
-        handleSelectItem,
-        toggleDropdownMenu
+        showDropdownMenu,
+        toggleDropdownMenu,
+        label,
+        handleSelectItem
       }
     },
   })
 </script>
 
 <style scoped>
-.dropdown {
-  width: 100%;
-}
-
-.menu {
-  width: 100%;
-}
-
-.item {
-  padding: 0;
-  display: flex;
-}
-
-.item:hover {
-  cursor: pointer;
-}
-
-.dropdown-toggle {
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.dropdown-toggle::after {
-  margin-left: auto;
-}
-
 .label {
   margin-right: 10px;
   white-space: normal;
@@ -124,4 +68,4 @@
   overflow-wrap: break-word;
   text-align: left;
 }
-</style>../utils
+</style>

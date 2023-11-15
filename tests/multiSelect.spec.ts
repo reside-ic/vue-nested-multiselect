@@ -5,6 +5,7 @@ import DropdownItem from "../src/components/DropdownItem.vue";
 import { vi } from "vitest";
 import Tags from "../src/components/Tags.vue";
 import { CheckStatus } from "../src/types";
+import BaseSelect from "../src/components/BaseSelect.vue";
 
 vi.mock("../src/components/utils", async () => {
     const flatOptionsExpanded = [
@@ -81,7 +82,7 @@ vi.mock("../src/components/utils", async () => {
 
 const mockPreventDefault = vi.fn();
 
-describe("Dropdown item tests", () => {
+describe("Multi select tests", () => {
     const options = [
         {
             id: "id1",
@@ -108,6 +109,14 @@ describe("Dropdown item tests", () => {
             label: "parent2"
         }
     ];
+
+    const checkedObject = {
+        "id1": CheckStatus.UNCHECKED,
+        "id1/id1_1": CheckStatus.UNCHECKED,
+        "id1/id1_2": CheckStatus.UNCHECKED,
+        "id1/id1_2/id1_2_1": CheckStatus.UNCHECKED,
+        "id2": CheckStatus.UNCHECKED
+    }
 
     const flatOptions = [
         {
@@ -153,12 +162,12 @@ describe("Dropdown item tests", () => {
         vi.resetAllMocks();
     });
 
-    const getWrapper = (id: string[] | undefined = undefined, placeholder = undefined) => {
+    const getWrapper = (ids: string[] | undefined = undefined, placeholder = undefined) => {
         return mount(MultiSelect, {
             props: {
                 options,
                 placeholder,
-                modelValue: id
+                modelValue: ids
             }
         });
     };
@@ -166,32 +175,12 @@ describe("Dropdown item tests", () => {
     it("renders as expected", async () => {
         const wrapper = getWrapper();
 
-        const cDropdown = wrapper.findComponent(CDropdown);
-        expect(cDropdown.props("autoClose")).toBe("outside");
-        expect(cDropdown.props("popper")).toBe(false);
-        expect(cDropdown.classes()).toContain("dropdown");
+        const baseSelect = wrapper.findComponent(BaseSelect);
+        expect(baseSelect.props("options")).toStrictEqual(options);
+        expect(baseSelect.props("checkedObject")).toStrictEqual(checkedObject);
 
-        const cDropdownToggle = wrapper.findComponent(CDropdownToggle);
-        expect(cDropdownToggle.find("span").text()).toBe("Select...");
-        expect(cDropdownToggle.find("span").classes()).toContain("placeholder-span");
-
-        expect(cDropdownToggle.findComponent(Tags).exists()).toBe(false);
-
-        const cDropdownMenu = wrapper.findComponent(CDropdownMenu);
-        expect(cDropdownMenu.exists()).toBe(true);
-        expect(cDropdownMenu.classes()).toContain("menu");
-
-        const cDropdownItems = wrapper.findAllComponents(CDropdownItem);
-        expect(cDropdownItems.length).toBe(5);
-        expect(cDropdownItems.every((item, index) => [1, 2, 3].includes(index) ?
-                                                     !item.isVisible() :
-                                                     item.isVisible())).toBe(true);
-        cDropdownItems.forEach(item => expect(item.classes()).toContain("item"));
-
-        const dropdownItem = wrapper.findAllComponents(DropdownItem);
-        dropdownItem.forEach((item, index) => {
-            expect(item.props("option")).toStrictEqual(flatOptions[index]);
-        });
+        const placeholder = wrapper.find(".placeholder-span");
+        expect(placeholder.text()).toBe("Select...");
     });
 
     it("sets top level tags as expected", () => {
@@ -214,26 +203,6 @@ describe("Dropdown item tests", () => {
             "id1/id1_2/id1_2_1": CheckStatus.CHECKED,
             "id2": CheckStatus.CHECKED
         });
-    });
-
-    it("expand works as expected with dropdown item emits expand", () => {
-        const wrapper = getWrapper();
-        const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("expand", ["id1"]);
-        expect(wrapper.vm.flatOptions[1].show).toBe(true);
-        expect(wrapper.vm.flatOptions[2].show).toBe(true);
-    });
-
-    it("collapse works as expected", () => {
-        const wrapper = getWrapper();
-        const dropdownItems = wrapper.findAllComponents(DropdownItem);
-        dropdownItems[0].vm.$emit("expand", ["id1"]);
-        expect(wrapper.vm.flatOptions[1].show).toBe(true);
-        expect(wrapper.vm.flatOptions[2].show).toBe(true);
-
-        dropdownItems[0].vm.$emit("collapse", ["id1"]);
-        expect(wrapper.vm.flatOptions[1].show).toBe(false);
-        expect(wrapper.vm.flatOptions[2].show).toBe(false);
     });
 
     /*

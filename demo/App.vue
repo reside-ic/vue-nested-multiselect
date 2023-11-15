@@ -1,9 +1,11 @@
 <template>
-  <div style="margin: 2rem; width: 15rem;">
-    <h2>Single Select</h2>
-    <single-select :options="options" :modelValue="value" @update:modelValue="updateValue"/>
-    <h2 style="margin-top: 3rem;">Multi Select</h2>
-    <multi-select :options="options" :modelValue="multiValue" @update:modelValue="updateMultiValue"/>
+  <div style="margin-top: 90vh; margin-bottom: 90vh;">
+    <div style="margin: 2rem; width: 15rem;">
+      <h2>Single Select</h2>
+      <single-select :options="options" :modelValue="value" @update:modelValue="updateValue"/>
+      <h2 style="margin-top: 3rem;">Multi Select</h2>
+      <multi-select :options="options" :modelValue="multiValue" @update:modelValue="updateMultiValue"/>
+    </div>
   </div>
 </template>
 
