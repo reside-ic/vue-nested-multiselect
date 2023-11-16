@@ -33,10 +33,10 @@
   "dependencies": {
     "@coreui/coreui": "^4.3.2",
     "@coreui/vue": "^4.10.1",
-    "feather-icons": "^4.29.1",
     "path": "^0.12.7"
   },
   "devDependencies": {
+    "feather-icons": "^4.29.1",
     "vue-feather": "^2.0.0",
     "vue": "^3.3.7",
     "@types/jest": "^29.5.8",
