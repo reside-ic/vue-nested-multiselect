@@ -2,9 +2,6 @@ import { vi } from 'vitest';
 import { shallowMount } from "@vue/test-utils";
 import Dummy from "./Dummy.vue";
 
-// seems to be default for jsdom
-const innerScreenHeight = 768
-
 describe("useBaseSelect mixin tests", () => {
     const getWrapper = () => {
         return shallowMount(Dummy)

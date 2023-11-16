@@ -22,13 +22,13 @@
     },
     setup() {
       const value = ref<string | null>(null);
-      const updateValue = (optionId: string) => {
-        value.value = optionId
+      const updateValue = (node: Option) => {
+        value.value = node.id
       };
 
       const multiValue = ref<string[] | null>(null);
-      const updateMultiValue = (optionId: string[]) => {
-        multiValue.value = optionId
+      const updateMultiValue = (nodes: Option[]) => {
+        multiValue.value = nodes.map(node => node.id)
       }
       const options: Option[] = [
         {

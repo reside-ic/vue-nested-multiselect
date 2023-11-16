@@ -203,3 +203,43 @@ export const getTopLevelOptionTags = (
     });
     return topLevelOptionTags
 };
+
+export const getNode = (optionId: string, flatOptions: FlatOption[], options: Option[]) => {
+    const flatOptionPath = flatOptions.find(op => op.id === optionId)!.path;
+    let nodes = options;
+    flatOptionPath.forEach((id, index) => {
+        if (index < flatOptionPath.length - 1) {
+            nodes = nodes.find(node => node.id === id)!.children!;
+        }
+    });
+    return nodes.find(node => node.id === optionId)!;
+};
+
+export const getTopLevelOptions = (
+    selectedTags: FlatOption[],
+    flatOptions: FlatOption[]
+): Tag[] => {
+    const topLevelOptionTags: Tag[] = [];
+    selectedTags.forEach(op => {
+        const parentIds = op.path;
+
+        // we loop from the highest parent's id in this option's path
+        // to the lowest which is itself's id in its path and break
+        // when we find the first id that is checked
+        
+        // we store the rest of the lower ids in the lowLevelOptionIds
+        // because we already have a higher level tag that is checked
+        // so we do not care about any of its nested children
+        for (let i = 0; i < parentIds.length; i++) {
+            const parentOp = flatOptions.find(op => op.id === parentIds[i])!;
+            if (!topLevelOptionTags.map(tag => tag.id).includes(parentOp.id)) {
+                topLevelOptionTags.push({
+                    id: parentOp.id,
+                    label: parentOp.label
+                });
+            }
+            break;
+        }
+    });
+    return topLevelOptionTags
+};

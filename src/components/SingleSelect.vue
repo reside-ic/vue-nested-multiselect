@@ -13,6 +13,7 @@
   import { Option } from "../types";
   import useBaseSelect from '../mixins/useBaseSelect';
   import BaseSelect from './BaseSelect.vue';
+import { getNode } from '../utils';
 
   export default defineComponent({
     emits: ["update:modelValue"],
@@ -45,7 +46,8 @@
       });
 
       const handleSelectItem = (optionId: string) => {
-        emit("update:modelValue", optionId);
+        const node = getNode(optionId, flatOptions.value, props.options);
+        emit("update:modelValue", node);
         showDropdownMenu.value = false;
       };
 
