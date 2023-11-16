@@ -21,7 +21,7 @@ const ra = (e) => {
   return bn(t, e), t;
 }, bn = (e, t, n = [], r = !0) => {
   t.forEach((a) => {
-    const i = a.hasOwnProperty("children"), o = [...n, a.id], l = {
+    const i = !!(a.hasOwnProperty("children") && a.children && a.children.length > 0), o = [...n, a.id], l = {
       id: a.id,
       label: a.label,
       path: o,

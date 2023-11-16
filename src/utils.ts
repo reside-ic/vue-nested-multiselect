@@ -8,7 +8,7 @@ export const getFlattenedOptions = (options: Option[]) => {
 
 export const flattenOptions = (array: FlatOption[], options: Option[], path: string[] = [], show: boolean = true) => {
     options.forEach(op => {
-        const hasChildren = op.hasOwnProperty("children");
+        const hasChildren = !!(op.hasOwnProperty("children") && op.children && op.children.length > 0);
         const newPath = [...path, op.id];
 
         const baseOption = {
