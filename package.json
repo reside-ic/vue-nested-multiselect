@@ -7,7 +7,7 @@
   "license": "MIT",
   "author": "reside-ic",
   "homepage": "https://github.com/reside-ic/vue-nested-multiselect#readme",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "files": [
     "dist",
@@ -34,10 +34,10 @@
     "@coreui/coreui": "^4.3.2",
     "@coreui/vue": "^4.10.1",
     "feather-icons": "^4.29.1",
-    "path": "^0.12.7",
-    "vue-feather": "^2.0.0"
+    "path": "^0.12.7"
   },
   "devDependencies": {
+    "vue-feather": "^2.0.0",
     "vue": "^3.3.7",
     "@types/jest": "^29.5.8",
     "@vitejs/plugin-vue": "^4.2.3",
