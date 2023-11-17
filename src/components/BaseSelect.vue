@@ -83,6 +83,20 @@ export default defineComponent({
   overflow-y: auto;
 }
 
+.vnm-menu::-webkit-scrollbar {
+  width: 5px;
+}
+
+.vnm-menu::-webkit-scrollbar-track {
+  background: white;
+  border-radius: 5px;
+}
+
+.vnm-menu::-webkit-scrollbar-thumb {
+  background: lightgray;
+  border-radius: 5px;
+}
+
 .vnm-item {
   padding: 0;
   display: flex;

@@ -9145,7 +9145,7 @@ function Ai(e, t, n, r, a, i) {
     }, 8, ["direction", "visible"])
   ], 512);
 }
-const Fn = /* @__PURE__ */ Re(Oi, [["render", Ai], ["__scopeId", "data-v-cb0cc398"]]), Bi = g({
+const Fn = /* @__PURE__ */ Re(Oi, [["render", Ai], ["__scopeId", "data-v-8162cc26"]]), Bi = g({
   emits: ["update:modelValue"],
   components: {
     BaseSelect: Fn
