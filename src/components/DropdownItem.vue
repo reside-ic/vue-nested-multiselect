@@ -1,5 +1,5 @@
 <template>
-    <div :style="{ paddingLeft: `${indentation * 1.6 + 0.5}rem` }"
+    <div :style="{ paddingLeft: `${paddingLeft}rem` }"
          @click="handleClick"
          class="vnm-dropdown-item-div">
         <template v-if="option.hasChildren">
@@ -59,12 +59,16 @@
                 }
             };
 
-            const indentation = computed(() => props.option.path.length - 1);
+            const paddingLeft = computed(() => {
+                const indentation = props.option.path.length - 1;
+                const extraPadding = props.checked !== undefined ? 0 : 0.4;
+                return indentation * 1.4 + 0.5 + extraPadding;
+            });
 
             return {
                 handleClick,
                 handleIconClick,
-                indentation
+                paddingLeft
             }
         },
     });
@@ -72,9 +76,9 @@
 
 <style scoped>
 .vnm-icon-div {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    padding-right: 0.4rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.2rem;
+    padding-right: 0.2rem;
     color: #2c384af2;
 }
 
@@ -89,9 +93,8 @@
 }
 
 .vnm-check-div {
-    padding-top: 0.4rem;
-    padding-bottom: 0.5rem;
-    padding-left: 0.2rem;
+    padding-top: 0.6rem;
+    padding-left: 0.1rem;
 }
 
 .vnm-text-div {
@@ -101,6 +104,7 @@
     overflow: auto;
     overflow-wrap: break-word;
     color: #2c384af2;
+    font-size: 0.9rem;
 }
 
 .vnm-dropdown-item-div {

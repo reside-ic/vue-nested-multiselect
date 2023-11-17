@@ -7,7 +7,7 @@
   "license": "MIT",
   "author": "reside-ic",
   "homepage": "https://github.com/reside-ic/vue-nested-multiselect#readme",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "type": "module",
   "files": [
     "dist",

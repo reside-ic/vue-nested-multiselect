@@ -8994,7 +8994,7 @@ function xi(e, t, n, r, a, i) {
     ])
   ], 64);
 }
-const bi = /* @__PURE__ */ Re(yi, [["render", xi], ["__scopeId", "data-v-dad6baa1"]]), ji = g({
+const bi = /* @__PURE__ */ Re(yi, [["render", xi], ["__scopeId", "data-v-db228c80"]]), ji = g({
   emits: ["select-item", "expand", "collapse"],
   props: {
     option: {
@@ -9014,11 +9014,14 @@ const bi = /* @__PURE__ */ Re(yi, [["render", xi], ["__scopeId", "data-v-dad6baa
       t("select-item", e.option.id);
     }, r = () => {
       e.option.hasChildren && e.option.open ? t("collapse", e.option.path) : t("expand", e.option.path);
-    }, a = je(() => e.option.path.length - 1);
+    }, a = je(() => {
+      const i = e.option.path.length - 1, o = e.checked !== void 0 ? 0 : 0.4;
+      return i * 1.4 + 0.5 + o;
+    });
     return {
       handleClick: n,
       handleIconClick: r,
-      indentation: a
+      paddingLeft: a
     };
   }
 });
@@ -9029,7 +9032,7 @@ const wi = {
 function Si(e, t, n, r, a, i) {
   const o = Y("vue-feather"), l = Y("check-box");
   return F(), pe("div", {
-    style: ea({ paddingLeft: `${e.indentation * 1.6 + 0.5}rem` }),
+    style: ea({ paddingLeft: `${e.paddingLeft}rem` }),
     onClick: t[1] || (t[1] = (...s) => e.handleClick && e.handleClick(...s)),
     class: "vnm-dropdown-item-div"
   }, [
@@ -9059,7 +9062,7 @@ function Si(e, t, n, r, a, i) {
     ])
   ], 4);
 }
-const ki = /* @__PURE__ */ Re(ji, [["render", Si], ["__scopeId", "data-v-b3a0afed"]]), Oi = g({
+const ki = /* @__PURE__ */ Re(ji, [["render", Si], ["__scopeId", "data-v-579e594e"]]), Oi = g({
   emits: ["hide", "toggle-click", "select-item"],
   components: {
     CDropdown: jr,

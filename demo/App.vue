@@ -1,10 +1,14 @@
 <template>
   <div style="margin-top: 90vh; margin-bottom: 90vh;">
     <div style="margin: 2rem; width: 15rem;">
-      <h2>Single Select</h2>
+      <h2>Single Select With Nesting</h2>
       <single-select :options="options" :modelValue="value" @update:modelValue="updateValue"/>
-      <h2 style="margin-top: 3rem;">Multi Select</h2>
+      <h2 style="margin-top: 3rem;">Multi Select With Nesting</h2>
       <multi-select :options="options" :modelValue="multiValue" @update:modelValue="updateMultiValue"/>
+      <h2 style="margin-top: 3rem;">Single Select Without Nesting</h2>
+      <single-select :options="nonNestedOptions" :modelValue="nonNestedvalue" @update:modelValue="updateNonNestedValue"/>
+      <h2 style="margin-top: 3rem;">Multi Select Without Nesting</h2>
+      <multi-select :options="nonNestedOptions" :modelValue="nonNestedMultiValue" @update:modelValue="updateNonNestedMultiValue"/>
     </div>
   </div>
 </template>
@@ -30,6 +34,17 @@
       const updateMultiValue = (nodes: Option[]) => {
         multiValue.value = nodes.map(node => node.id)
       }
+
+      const nonNestedvalue = ref<string | null>(null);
+      const updateNonNestedValue = (node: Option) => {
+        nonNestedvalue.value = node.id
+      };
+
+      const nonNestedMultiValue = ref<string[] | null>(null);
+      const updateNonNestedMultiValue = (nodes: Option[]) => {
+        nonNestedMultiValue.value = nodes.map(node => node.id)
+      }
+
       const options: Option[] = [
         {
           id: "MWI_1",
@@ -67,12 +82,32 @@
         }
       ]
 
+      const nonNestedOptions: Option[] = [
+        {
+          id: "MWI_1",
+          label: "Option1WithLongNameAndNoSpaces",
+        },
+        {
+          id: "MWI_2",
+          label: "Option 2 with a long name and spaces",
+        },
+        {
+          id: "MWI_3",
+          label: "Option 3",
+        },
+      ]
+
       return {
         options,
         value,
         updateValue,
         multiValue,
-        updateMultiValue
+        updateMultiValue,
+        nonNestedOptions,
+        nonNestedvalue,
+        nonNestedMultiValue,
+        updateNonNestedValue,
+        updateNonNestedMultiValue
       }
     }
   })

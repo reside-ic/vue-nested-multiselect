@@ -40,32 +40,35 @@
 
 <style scoped>
 .vnm-checked-div, .vnm-unchecked-div {
-    margin-right: 0.6rem
+    margin-right: 0.5rem
 }
 
 .vnm-check-button {
-    height: 1rem;
-    width: 1rem;
+    height: 1rem !important;
+    width: 1rem !important;
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .vnm-checked-icon {
     height: 0.75rem;
     width: 0.75rem;
-    margin-top: 0.05rem;
-    vertical-align: super;
+    margin-top: 0rem;
     color: aliceblue;
 }
 
 .vnm-checked-div > .btn.disabled, .btn:disabled {
     background-color: red;
     border-color: red !important;
+    /* border-radius: 0; */
     opacity: 1;
 }
 
 .vnm-unchecked-div > .btn.disabled, .btn:disabled {
     background-color: transparent;
-    border-color: rgba(44, 56, 74, 0.95) !important;
+    border-color: rgba(44, 56, 74, 0.55) !important;
     opacity: 1;
 }
 </style>
