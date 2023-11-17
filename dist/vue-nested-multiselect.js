@@ -9059,7 +9059,7 @@ function Si(e, t, n, r, a, i) {
     ])
   ], 4);
 }
-const ki = /* @__PURE__ */ Re(ji, [["render", Si], ["__scopeId", "data-v-2e1474e4"]]), Oi = g({
+const ki = /* @__PURE__ */ Re(ji, [["render", Si], ["__scopeId", "data-v-c0c36ac4"]]), Oi = g({
   emits: ["hide", "toggle-click", "select-item"],
   components: {
     CDropdown: jr,

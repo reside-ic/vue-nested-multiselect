@@ -99,7 +99,7 @@
     white-space: normal;
     overflow: auto;
     overflow-wrap: break-word;
-    color: rbga(44, 56, 74, 0.95);
+    color: #2c384af2;
 }
 
 .vnm-dropdown-item-div {
