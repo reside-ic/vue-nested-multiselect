@@ -8946,19 +8946,19 @@ const Re = (e, t) => {
   for (const [r, a] of t)
     n[r] = a;
   return n;
-}, hi = { class: "checked-div" }, mi = { class: "checked-div" }, gi = { class: "unchecked-div" };
+}, hi = { class: "vnm-checked-div" }, mi = { class: "vnm-checked-div" }, gi = { class: "vnm-unchecked-div" };
 function xi(e, t, n, r, a, i) {
   const o = Y("vue-feather"), l = Y("c-button");
   return F(), pe(St, null, [
     oe(Oe("div", hi, [
       Q(l, {
-        class: "check-button",
+        class: "vnm-check-button",
         disabled: ""
       }, {
         default: fe(() => [
           Q(o, {
             type: "check",
-            class: "checked-icon",
+            class: "vnm-checked-icon",
             "stroke-width": "3"
           })
         ]),
@@ -8969,13 +8969,13 @@ function xi(e, t, n, r, a, i) {
     ]),
     oe(Oe("div", mi, [
       Q(l, {
-        class: "check-button",
+        class: "vnm-check-button",
         disabled: ""
       }, {
         default: fe(() => [
           Q(o, {
             type: "minus",
-            class: "checked-icon",
+            class: "vnm-checked-icon",
             "stroke-width": "3"
           })
         ]),
@@ -8986,7 +8986,7 @@ function xi(e, t, n, r, a, i) {
     ]),
     oe(Oe("div", gi, [
       Q(l, {
-        class: "check-button",
+        class: "vnm-check-button",
         disabled: ""
       })
     ], 512), [
@@ -8994,7 +8994,7 @@ function xi(e, t, n, r, a, i) {
     ])
   ], 64);
 }
-const bi = /* @__PURE__ */ Re(yi, [["render", xi], ["__scopeId", "data-v-1fbc8580"]]), ji = g({
+const bi = /* @__PURE__ */ Re(yi, [["render", xi], ["__scopeId", "data-v-dad6baa1"]]), ji = g({
   emits: ["select-item", "expand", "collapse"],
   props: {
     option: {
@@ -9024,29 +9024,29 @@ const bi = /* @__PURE__ */ Re(yi, [["render", xi], ["__scopeId", "data-v-1fbc858
 });
 const wi = {
   key: 1,
-  class: "check-div"
-}, Ci = { class: "text-div" };
+  class: "vnm-check-div"
+}, Ci = { class: "vnm-text-div" };
 function Si(e, t, n, r, a, i) {
   const o = Y("vue-feather"), l = Y("check-box");
   return F(), pe("div", {
     style: ea({ paddingLeft: `${e.indentation * 1.6 + 0.5}rem` }),
     onClick: t[1] || (t[1] = (...s) => e.handleClick && e.handleClick(...s)),
-    class: "dropdown-item-div"
+    class: "vnm-dropdown-item-div"
   }, [
     e.option.hasChildren ? (F(), pe("div", {
       key: 0,
-      class: "icon-div",
+      class: "vnm-icon-div",
       onClick: t[0] || (t[0] = et((...s) => e.handleIconClick && e.handleIconClick(...s), ["prevent", "stop"]))
     }, [
       oe(Q(o, {
         type: "chevron-right",
-        class: "icon"
+        class: "vnm-icon"
       }, null, 512), [
         [ye, !e.option.open]
       ]),
       oe(Q(o, {
         type: "chevron-down",
-        class: "icon"
+        class: "vnm-icon"
       }, null, 512), [
         [ye, e.option.open]
       ])
@@ -9059,7 +9059,7 @@ function Si(e, t, n, r, a, i) {
     ])
   ], 4);
 }
-const ki = /* @__PURE__ */ Re(ji, [["render", Si], ["__scopeId", "data-v-78b846eb"]]), Oi = g({
+const ki = /* @__PURE__ */ Re(ji, [["render", Si], ["__scopeId", "data-v-2e1474e4"]]), Oi = g({
   emits: ["hide", "toggle-click", "select-item"],
   components: {
     CDropdown: jr,
@@ -9097,7 +9097,7 @@ function Ai(e, t, n, r, a, i) {
   return F(), pe("div", Mi, [
     Q(u, {
       "auto-close": "outside",
-      class: "dropdown",
+      class: "vnm-dropdown",
       popper: !1,
       direction: e.direction,
       visible: e.showDropdownMenu,
@@ -9113,14 +9113,14 @@ function Ai(e, t, n, r, a, i) {
           _: 3
         }),
         Q(c, {
-          class: "menu",
+          class: "vnm-menu",
           onClick: t[2] || (t[2] = et(() => {
           }, ["prevent"])),
           onMousedown: t[3] || (t[3] = et(() => {
           }, ["prevent"]))
         }, {
           default: fe(() => [
-            (F(!0), pe(St, null, xn(e.flatOptions, (f) => oe((F(), We(s, { class: "item" }, {
+            (F(!0), pe(St, null, xn(e.flatOptions, (f) => oe((F(), We(s, { class: "vnm-item" }, {
               default: fe(() => [
                 Q(l, {
                   option: f,
@@ -9142,7 +9142,7 @@ function Ai(e, t, n, r, a, i) {
     }, 8, ["direction", "visible"])
   ], 512);
 }
-const Fn = /* @__PURE__ */ Re(Oi, [["render", Ai], ["__scopeId", "data-v-66b5c606"]]), Bi = g({
+const Fn = /* @__PURE__ */ Re(Oi, [["render", Ai], ["__scopeId", "data-v-cb0cc398"]]), Bi = g({
   emits: ["update:modelValue"],
   components: {
     BaseSelect: Fn

@@ -1,7 +1,7 @@
 <template>
     <div ref="dropdownRef">
         <c-dropdown auto-close="outside"
-                    class="dropdown"
+                    class="vnm-dropdown"
                     :popper="false"
                     :direction="direction"
                     :visible="showDropdownMenu"
@@ -9,11 +9,11 @@
             <c-dropdown-toggle @click="$emit('toggle-click')">
                 <slot></slot>
             </c-dropdown-toggle>
-            <c-dropdown-menu class="menu"
+            <c-dropdown-menu class="vnm-menu"
                              @click.prevent
                              @mousedown.prevent>
                 <template v-for="option in flatOptions">
-                    <c-dropdown-item v-show="option.show" class="item">
+                    <c-dropdown-item v-show="option.show" class="vnm-item">
                         <dropdown-item :option="option"
                                        :checked="checkedObject ? checkedObject[option.path.join('/')] : undefined"
                                        @expand="expand"
@@ -73,17 +73,17 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.dropdown {
+.vnm-dropdown {
   width: 100%;
 }
 
-.menu {
+.vnm-menu {
   width: 100%;
   max-height: min(300px, 40vh);
   overflow-y: auto;
 }
 
-.item {
+.vnm-item {
   padding: 0;
   display: flex;
 }

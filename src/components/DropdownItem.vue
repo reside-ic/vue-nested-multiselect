@@ -1,25 +1,25 @@
 <template>
     <div :style="{ paddingLeft: `${indentation * 1.6 + 0.5}rem` }"
          @click="handleClick"
-         class="dropdown-item-div">
+         class="vnm-dropdown-item-div">
         <template v-if="option.hasChildren">
-            <div class="icon-div" @click.prevent.stop="handleIconClick">
+            <div class="vnm-icon-div" @click.prevent.stop="handleIconClick">
                 <vue-feather type="chevron-right"
                             v-show="!option.open"
-                            class="icon"/>
+                            class="vnm-icon"/>
                 <vue-feather type="chevron-down"
                             v-show="option.open"
-                            class="icon"/>
+                            class="vnm-icon"/>
             </div>
         </template>
 
         <template v-if="checked !== undefined">
-            <div class="check-div">
+            <div class="vnm-check-div">
                 <check-box :checked="checked"/>
             </div>
         </template>
 
-        <div class="text-div">
+        <div class="vnm-text-div">
             <span>{{ option.label }}</span>
         </div>
     </div>
@@ -71,29 +71,29 @@
 </script>
 
 <style scoped>
-.icon-div {
+.vnm-icon-div {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-right: 0.4rem;
 }
 
-.icon {
+.vnm-icon {
     width: 1.2rem !important;
     height: 1.2rem !important;
     vertical-align: sub;
 }
 
-.icon-div:hover {
+.vnm-icon-div:hover {
     color: red;
 }
 
-.check-div {
+.vnm-check-div {
     padding-top: 0.4rem;
     padding-bottom: 0.5rem;
     padding-left: 0.2rem;
 }
 
-.text-div {
+.vnm-text-div {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     white-space: normal;
@@ -102,7 +102,7 @@
     color: rbga(44, 56, 74, 0.95);
 }
 
-.dropdown-item-div {
+.vnm-dropdown-item-div {
     padding-right: 0.5rem;
     display: flex;
     width: 100%;

@@ -1,16 +1,16 @@
 <template>
-    <div class="checked-div" v-show="checked === CheckStatus.CHECKED">
-        <c-button class="check-button" disabled>
-            <vue-feather type="check" class="checked-icon" stroke-width="3"/>
+    <div class="vnm-checked-div" v-show="checked === CheckStatus.CHECKED">
+        <c-button class="vnm-check-button" disabled>
+            <vue-feather type="check" class="vnm-checked-icon" stroke-width="3"/>
         </c-button>
     </div>
-    <div class="checked-div" v-show="checked === CheckStatus.PARTIAL">
-        <c-button class="check-button" disabled>
-            <vue-feather type="minus" class="checked-icon" stroke-width="3"/>
+    <div class="vnm-checked-div" v-show="checked === CheckStatus.PARTIAL">
+        <c-button class="vnm-check-button" disabled>
+            <vue-feather type="minus" class="vnm-checked-icon" stroke-width="3"/>
         </c-button>
     </div>
-    <div class="unchecked-div" v-show="checked === CheckStatus.UNCHECKED">
-        <c-button class="check-button" disabled></c-button>
+    <div class="vnm-unchecked-div" v-show="checked === CheckStatus.UNCHECKED">
+        <c-button class="vnm-check-button" disabled></c-button>
     </div>
 </template>
 
@@ -39,17 +39,17 @@
 </script>
 
 <style scoped>
-.checked-div, .unchecked-div {
+.vnm-checked-div, .vnm-unchecked-div {
     margin-right: 0.6rem
 }
 
-.check-button {
+.vnm-check-button {
     height: 1rem;
     width: 1rem;
     padding: 0;
 }
 
-.checked-icon {
+.vnm-checked-icon {
     height: 0.75rem;
     width: 0.75rem;
     margin-top: 0.05rem;
@@ -57,13 +57,13 @@
     color: aliceblue;
 }
 
-.checked-div > .btn.disabled, .btn:disabled {
+.vnm-checked-div > .btn.disabled, .btn:disabled {
     background-color: red;
     border-color: red !important;
     opacity: 1;
 }
 
-.unchecked-div > .btn.disabled, .btn:disabled {
+.vnm-unchecked-div > .btn.disabled, .btn:disabled {
     background-color: transparent;
     border-color: rgba(44, 56, 74, 0.95) !important;
     opacity: 1;
