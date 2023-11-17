@@ -75,6 +75,7 @@
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-right: 0.4rem;
+    color: #2c384af2;
 }
 
 .vnm-icon {
@@ -84,7 +85,7 @@
 }
 
 .vnm-icon-div:hover {
-    color: red;
+    color: red !important;
 }
 
 .vnm-check-div {
