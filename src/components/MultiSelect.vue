@@ -14,9 +14,9 @@
 
 <script lang="ts">
   import { PropType, computed, defineComponent } from 'vue';
-  import { Option, FlatOption, CheckStatus } from "../types";
+  import { Option, FlatOption, CheckStatus, Tag } from "../types";
   import Tags from './Tags.vue';
-  import { getCheckedObject, getNestedChildrenIds, getTopLevelOptionTags, getNode } from "../utils";
+  import { getCheckedObject, getNestedChildrenIds, getTopLevelOptionTags } from "../utils";
   import useBaseSelect from '../mixins/useBaseSelect';
   import BaseSelect from './BaseSelect.vue';
 
@@ -90,16 +90,14 @@
             selectedIds = [...fullModelValue || [], optionId];
           }
         }
-        const selectOptions: FlatOption[] = selectedIds.map(id => {
-          return flatOptions.value.find(op => op.id === id)!;
+        const selectOptions: Tag[] = selectedIds.map(id => {
+          const option = flatOptions.value.find(op => op.id === id)!;
+          return {
+            id: option.id,
+            label: option.label
+          }
         }) || [];
-        const childrenIds = getNestedChildrenIds(flatOptions.value, selectedIds);
-        const newCheckedObject = getCheckedObject(flatOptions.value, childrenIds);
-        const topLevelTags = getTopLevelOptionTags(selectOptions, flatOptions.value, newCheckedObject);
-        const topLevelNodes = topLevelTags.map(tag => {
-          return getNode(tag.id, flatOptions.value, props.options);
-        });
-        emit("update:modelValue", topLevelNodes);
+        emit("update:modelValue", selectOptions);
       }
 
       return {
