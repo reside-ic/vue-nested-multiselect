@@ -85,7 +85,7 @@
 .vnm-icon {
     width: 1.2rem !important;
     height: 1.2rem !important;
-    vertical-align: sub;
+    vertical-align: middle;
 }
 
 .vnm-icon-div:hover {
