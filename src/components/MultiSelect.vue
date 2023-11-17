@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-  import { PropType, computed, defineComponent } from 'vue';
+  import { PropType, computed, defineComponent, watch } from 'vue';
   import { Option, FlatOption, CheckStatus, Tag } from "../types";
   import Tags from './Tags.vue';
   import { getCheckedObject, getNestedChildrenIds, getTopLevelOptionTags } from "../utils";
@@ -41,6 +41,25 @@
     },
     setup(props, { emit }) {
       const { flatOptions } = useBaseSelect(props.options);
+
+      const ensureCompleteValue = (modelValues: string[] | undefined | null) => {
+        if (!modelValues) return
+        const newValues = [...modelValues];
+        const completeNewValues = getNestedChildrenIds(flatOptions.value, newValues);
+        newValues.sort();
+        completeNewValues.sort();
+        if (JSON.stringify(newValues) !== JSON.stringify(completeNewValues)) {
+          const completeOptions: Tag[] = completeNewValues.map(id => {
+            const option = flatOptions.value.find(op => op.id === id)!;
+            return {
+              id: option.id,
+              label: option.label
+            }
+          }) || [];
+          emit("update:modelValue", completeOptions);
+        }
+      };
+      ensureCompleteValue(props.modelValue);
 
       const tagsArray = computed(() => {
         const allSelectedOptions: FlatOption[] = props.modelValue?.map(value => {
@@ -99,6 +118,8 @@
         }) || [];
         emit("update:modelValue", selectOptions);
       }
+
+      watch(() => props.modelValue, ensureCompleteValue);
 
       return {
         tagsArray,
