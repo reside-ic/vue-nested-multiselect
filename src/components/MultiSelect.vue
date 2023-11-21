@@ -45,7 +45,15 @@
       const ensureCompleteValue = (modelValues: string[] | undefined | null) => {
         if (!modelValues) return
         const newValues = [...modelValues];
-        const completeNewValues = getNestedChildrenIds(flatOptions.value, newValues);
+        const valuesWithChildren = getNestedChildrenIds(flatOptions.value, newValues);
+        const checkedObject = getCheckedObject(flatOptions.value, valuesWithChildren);
+        const completeNewValues: string[] = [];
+        Object.entries(checkedObject).forEach(([key, value]) => {
+          if (value === CheckStatus.CHECKED) {
+            const id = key.split("/").at(-1)!;
+            completeNewValues.push(id);
+          }
+        });
         newValues.sort();
         completeNewValues.sort();
         if (JSON.stringify(newValues) !== JSON.stringify(completeNewValues)) {
