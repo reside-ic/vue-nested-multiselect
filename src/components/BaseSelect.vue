@@ -14,6 +14,7 @@
                 <template v-for="option in flatOptions">
                     <c-dropdown-item v-show="option.show" class="vnm-item">
                         <dropdown-item :option="option"
+                                       :checked="checkedObject ? checkedObject[option.path.join('/')] : undefined"
                                        @expand="expand"
                                        @collapse="collapse"
                                        @select-item="$emit('select-item', $event)"></dropdown-item>
@@ -26,7 +27,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { Option } from '../types';
+import { CheckStatus, Option } from '../types';
 import { CDropdown, CDropdownToggle, CDropdownItem, CDropdownMenu } from "@coreui/vue";
 import useBaseSelect from '../mixins/useBaseSelect';
 import DropdownItem from './DropdownItem.vue';
@@ -47,6 +48,9 @@ export default defineComponent({
         },
         showDropdownMenu: {
             type: Boolean
+        },
+        checkedObject: {
+            type: Object as PropType<Record<string, CheckStatus>>
         }
     },
     setup(props) {
