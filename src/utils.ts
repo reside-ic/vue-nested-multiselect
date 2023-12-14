@@ -43,6 +43,7 @@ export const expandOptions = (array: FlatOption[], optionPath: string[]) => {
 
     while (index < array.length && array[index].path.length > optionPath.length) {
         const currentOption = array[index];
+        // Show options whose immediate parents are marked as open
         const show = openOptionsPaths.some(openOpPath => {
             return openOpPath.length === array[index].path.length - 1 &&
                    arraysAreEqual(openOpPath, array[index].path.slice(0, -1));
