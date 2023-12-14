@@ -46,11 +46,10 @@ const flatOptions = [
 ];
 
 describe("base select tests", () => {
-    const getWrapper = (showDropdownMenu: undefined | boolean = undefined) => {
+    const getWrapper = (emptyOptions: boolean = false) => {
         return mount(BaseSelect, {
             props: {
-                options,
-                showDropdownMenu
+                options: emptyOptions ? undefined : options
             },
             slots: {
                 default: '<div id="slot">Random</div>'
@@ -84,5 +83,32 @@ describe("base select tests", () => {
             expect(item.props("option")).toStrictEqual(flatOptions[index]);
             expect(item.props("checked")).toBe(undefined);
         });
+    });
+
+    test("hide event in cDropdown emits hide", () => {
+        const wrapper = getWrapper();
+        const cDropdown = wrapper.findComponent(CDropdown);
+        cDropdown.vm.$emit("hide");
+        expect(wrapper.emitted("hide")![0]).toStrictEqual([]);
+    });
+
+    test("click event in cDropdownToggle emits toggle-click", () => {
+        const wrapper = getWrapper();
+        const cDropdownToggle = wrapper.findComponent(CDropdownToggle);
+        cDropdownToggle.vm.$emit("click");
+        expect(wrapper.emitted("toggle-click")![0]).toStrictEqual([]);
+    });
+
+    test("select item emit works as expected", () => {
+        const wrapper = getWrapper();
+        const dropdownItem1 = wrapper.findAllComponents(DropdownItem)[0];
+        dropdownItem1.vm.$emit("select-item", "test");
+        expect(wrapper.emitted("select-item")![0][0]).toBe("test");
+    });
+
+    test("empty options render nothing", () => {
+        const wrapper = getWrapper(true);
+        const dropdownItems = wrapper.findAllComponents(DropdownItem);
+        expect(dropdownItems.length).toBe(0);
     });
 });

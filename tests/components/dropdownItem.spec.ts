@@ -86,7 +86,7 @@ describe("Dropdown item tests", () => {
             open: false
         });
 
-        wrapper.vm.handleIconClick();
+        wrapper.find(".vnm-icon-div").trigger("click");
         expect(wrapper.emitted("expand")![0][0]).toStrictEqual(["my", "test", "path", "and", "testId"]);
     });
 
@@ -96,7 +96,7 @@ describe("Dropdown item tests", () => {
             open: true
         });
 
-        wrapper.vm.handleIconClick();
+        wrapper.find(".vnm-icon-div").trigger("click");
         expect(wrapper.emitted("collapse")![0][0]).toStrictEqual(["my", "test", "path", "and", "testId"]);
     });
 });
