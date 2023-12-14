@@ -46,8 +46,8 @@
       });
 
       const handleSelectItem = (optionId: string) => {
-        const node = getNode(optionId, flatOptions.value, props.options);
-        emit("update:modelValue", node);
+        const { id, label } = getNode(optionId, flatOptions.value, props.options);
+        emit("update:modelValue", { id, label });
         showDropdownMenu.value = false;
       };
 
