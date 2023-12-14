@@ -9,7 +9,7 @@ export default defineConfig({
     environment: "jsdom",
     css: true,
     coverage: {
-      provider: "v8",
+      provider: "istanbul",
       include: ["src/components"],
     }
   },
