@@ -10,7 +10,7 @@ export default defineConfig({
     css: true,
     coverage: {
       provider: "istanbul",
-      include: ["src/components"],
+      include: ["src/components", "src/utils.ts"],
     }
   },
   build: {
