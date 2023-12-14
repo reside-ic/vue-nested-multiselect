@@ -7,7 +7,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    css: true
+    css: true,
+    coverage: {
+      provider: "v8"
+    }
   },
   build: {
     lib: {
