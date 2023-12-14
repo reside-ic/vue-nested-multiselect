@@ -1,5 +1,5 @@
 import { FlatOption } from "../src/types";
-import { collapseOptions, expandOptions, flattenOptions } from "../src/utils";
+import { collapseOptions, expandOptions, flattenOptions, getNode } from "../src/utils";
 
 describe("Utils tests", () => {
     const dummyOptions = [
@@ -123,5 +123,11 @@ describe("Utils tests", () => {
                 expect(op.show).toBe(false);
             }
         });
+    });
+
+    it("get node works as expected", () => {
+        const array: FlatOption[] = JSON.parse(JSON.stringify(flatOptionsExpanded));
+        const node = getNode("id1_1", array, dummyOptions);
+        expect(node).toStrictEqual(dummyOptions[0].children![0]);
     });
 });
