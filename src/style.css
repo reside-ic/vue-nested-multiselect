@@ -1,0 +1,5 @@
+.dropdown-menu {
+    --cui-dropdown-link-active-bg: #ebedef !important;
+    --cui-dropdown-link-active-color: rbga(44, 56, 74, 0.95) !important;
+  }
+  

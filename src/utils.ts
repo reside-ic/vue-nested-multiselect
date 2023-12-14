@@ -71,3 +71,14 @@ export const collapseOptions = (array: FlatOption[], optionPath: string[]) => {
         index++;
     };
 };
+
+export const getNode = (optionId: string, flatOptions: FlatOption[], options: Option[]) => {
+    const flatOptionPath = flatOptions.find(op => op.id === optionId)!.path;
+    let nodes = options;
+    flatOptionPath.forEach((id, index) => {
+        if (index < flatOptionPath.length - 1) {
+            nodes = nodes.find(node => node.id === id)!.children!;
+        }
+    });
+    return nodes.find(node => node.id === optionId)!;
+};
