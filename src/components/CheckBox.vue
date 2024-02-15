@@ -1,16 +1,16 @@
 <template>
     <div class="vnm-checked-div" v-show="checked === CheckStatus.CHECKED">
-        <c-button class="vnm-check-button" disabled>
+        <c-button class="vnm-check-button">
             <vue-feather type="check" class="vnm-checked-icon" stroke-width="3"/>
         </c-button>
     </div>
     <div class="vnm-checked-div" v-show="checked === CheckStatus.PARTIAL">
-        <c-button class="vnm-check-button" disabled>
+        <c-button class="vnm-check-button">
             <vue-feather type="minus" class="vnm-checked-icon" stroke-width="3"/>
         </c-button>
     </div>
     <div class="vnm-unchecked-div" v-show="checked === CheckStatus.UNCHECKED">
-        <c-button class="vnm-check-button" disabled></c-button>
+        <c-button class="vnm-check-button"></c-button>
     </div>
 </template>
 
@@ -59,14 +59,13 @@
     color: aliceblue;
 }
 
-.vnm-checked-div > .btn.disabled, .btn:disabled {
+.vnm-checked-div > .btn {
     background-color: red;
     border-color: red !important;
-    /* border-radius: 0; */
     opacity: 1;
 }
 
-.vnm-unchecked-div > .btn.disabled, .btn:disabled {
+.vnm-unchecked-div > .btn {
     background-color: transparent;
     border-color: rgba(44, 56, 74, 0.55) !important;
     opacity: 1;
