@@ -9,7 +9,7 @@ export default (options: Option[]) => {
         expandOptions(flatOptions.value, optionPath);
     };
 
-      const collapse = (optionPath: string[]) => {
+    const collapse = (optionPath: string[]) => {
         collapseOptions(flatOptions.value, optionPath);
     };
 
