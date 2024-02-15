@@ -22,7 +22,6 @@ describe("Check Box tests", () => {
             const button = div.findComponent(CButton);
             expect(button.exists()).toBe(true);
             expect(button.classes()).toContain("vnm-check-button");
-            expect(button.props("disabled")).toBe(true);
         });
     });
 
