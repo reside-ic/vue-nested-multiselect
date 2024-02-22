@@ -43,6 +43,7 @@ export const expandOptions = (array: FlatOption[], optionPath: string[]) => {
 
     while (index < array.length && array[index].path.length > optionPath.length) {
         const currentOption = array[index];
+        // Show options whose immediate parents are marked as open
         const show = openOptionsPaths.some(openOpPath => {
             return openOpPath.length === array[index].path.length - 1 &&
                    arraysAreEqual(openOpPath, array[index].path.slice(0, -1));
@@ -70,4 +71,15 @@ export const collapseOptions = (array: FlatOption[], optionPath: string[]) => {
         array[index].show = false;
         index++;
     };
+};
+
+export const getNode = (optionId: string, flatOptions: FlatOption[], options: Option[]) => {
+    const flatOptionPath = flatOptions.find(op => op.id === optionId)!.path;
+    let nodes = options;
+    flatOptionPath.forEach((id, index) => {
+        if (index < flatOptionPath.length - 1) {
+            nodes = nodes.find(node => node.id === id)!.children!;
+        }
+    });
+    return nodes.find(node => node.id === optionId)!;
 };
