@@ -1,12 +1,8 @@
 <template>
-  <hello-world/>
+  <div>Hello World</div>
 </template>
 
 <script lang="ts">
-  import HelloWorld from "../src/components/Component.vue";
   import { defineComponent } from "vue";
-
-  export default defineComponent({
-    components: { HelloWorld }
-  });
+  export default defineComponent({});
 </script>
